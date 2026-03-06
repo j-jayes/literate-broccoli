@@ -15,22 +15,23 @@ def test_server_has_tool():
     assert mcp.name == "lunch-menu-poll"
 
 
-@patch("src.tools.menu.fetch_page_text", new_callable=AsyncMock)
-@patch("src.tools.menu.extract_menu")
-def test_get_menu_poll_integration(mock_extract, mock_fetch):
-    """Test the full tool pipeline with mocked dependencies."""
+@patch("src.tools.menu.browse_and_extract", new_callable=AsyncMock)
+def test_get_menu_poll_integration(mock_browse):
+    """Test the full tool pipeline with mocked browsing agent."""
     import asyncio
 
     from src.models.schemas import ExtractedMenuItem, MenuCategory
     from src.tools.menu import get_restaurant_menu
 
-    mock_fetch.return_value = "Pizza Margherita 95 kr\nCola 25 kr"
-    mock_extract.return_value = [
-        ExtractedMenuItem(name="Margherita", price=95, category=MenuCategory.main),
-        ExtractedMenuItem(name="Cola", price=25, category=MenuCategory.drink),
-    ]
+    mock_browse.return_value = (
+        "https://example.com/menu",
+        [
+            ExtractedMenuItem(name="Margherita", price=95, category=MenuCategory.main),
+            ExtractedMenuItem(name="Cola", price=25, category=MenuCategory.drink),
+        ],
+    )
 
-    card = asyncio.run(get_restaurant_menu("Test Restaurant", menu_url="https://example.com/menu"))
+    card = asyncio.run(get_restaurant_menu("Test Restaurant", menu_url="https://example.com"))
     assert card["type"] == "AdaptiveCard"
     assert len(card["body"][2]["choices"]) == 2
-    mock_fetch.assert_called_once_with("https://example.com/menu")
+    mock_browse.assert_called_once_with("Test Restaurant", "https://example.com")
