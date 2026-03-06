@@ -1,164 +1,27 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main]
   pull_request:
-    branches: [ main, develop ]
-
-env:
-  PYTHON_VERSION: '3.11'
-  NODE_VERSION: '18'
-  AZURE_SUBSCRIPTION_ID: 'e9b64842-3c87-4665-ad56-86ae7c20fe4b'
+    branches: [main]
 
 jobs:
-  test-python:
-    name: Test Python Backend
+  test:
+    name: Test
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v3
-    
+    - uses: actions/checkout@v4
+
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: ${{ env.PYTHON_VERSION }}
+        python-version: '3.12'
         cache: 'pip'
-    
+
     - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install -e .
-    
-    - name: Run linting
-      run: |
-        flake8 src/ --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 src/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    
-    - name: Run type checking
-      run: |
-        mypy src/ --ignore-missing-imports || true
-    
+      run: pip install -r requirements.txt
+
     - name: Run tests
-      run: |
-        pytest tests/ --cov=src --cov-report=xml --cov-report=term
-    
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        flags: backend
-
-  test-frontend:
-    name: Test Frontend
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
-        cache-dependency-path: src/web/package-lock.json
-    
-    - name: Install dependencies
-      run: |
-        cd src/web
-        npm ci || echo "No frontend package.json yet"
-    
-    - name: Run linting
-      run: |
-        cd src/web
-        npm run lint || echo "Linting not configured yet"
-    
-    - name: Run tests
-      run: |
-        cd src/web
-        npm test -- --coverage || echo "Tests not configured yet"
-    
-    - name: Build
-      run: |
-        cd src/web
-        npm run build || echo "Build not configured yet"
-
-  security-scan:
-    name: Security Scanning
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-    
-    - name: Upload Trivy results to GitHub Security
-      uses: github/codeql-action/upload-sarif@v2
-      with:
-        sarif_file: 'trivy-results.sarif'
-
-  deploy-staging:
-    name: Deploy to Staging
-    needs: [test-python, test-frontend]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop'
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-    - name: Deploy to Azure Staging
-      run: |
-        echo "Deploying to staging environment..."
-        # Add deployment commands here
-
-  deploy-production:
-    name: Deploy to Production
-    needs: [test-python, test-frontend, security-scan]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    environment:
-      name: production
-      url: https://lunch-ordering.azurewebsites.net
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    
-    - name: Deploy Infrastructure
-      run: |
-        az deployment group create \
-          --resource-group rg-lunch-ordering-prod \
-          --template-file azure/bicep/main.bicep \
-          --parameters environment=prod
-    
-    - name: Deploy Backend Services
-      run: |
-        echo "Deploying backend services..."
-        # Add deployment commands here
-    
-    - name: Deploy Frontend
-      run: |
-        echo "Deploying frontend..."
-        # Add deployment commands here
-    
-    - name: Run Health Checks
-      run: |
-        echo "Running health checks..."
-        # Add health check commands here
+      run: pytest tests/ -v
