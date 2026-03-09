@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(az acr repository show-tags --name acrlunchorder --repository lunch-web-app -o table)"
+      "Bash(az acr repository show-tags --name acrlunchorder --repository lunch-web-app -o table)",
+      "WebFetch(domain:gofastmcp.com)"
     ]
   }
 }

@@ -29,6 +29,72 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-81a214b06ef8c5721d2caf8fc783dcbd.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -123,6 +189,9 @@
       margin-right: 0; 
     }
   </style>
+  <script src="index_files/libs/quarto-diagram/mermaid.min.js"></script>
+  <script src="index_files/libs/quarto-diagram/mermaid-init.js"></script>
+  <link href="index_files/libs/quarto-diagram/mermaid.css" rel="stylesheet">
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -155,19 +224,18 @@
           </div>
   </div>
 </section>
-<section id="what-are-we-aiming-for" class="title-slide slide level1 center">
-<h1>What are we aiming for?</h1>
+<section>
+<section id="what-are-we-aiming-for" class="title-slide slide level1 center" data-background-color="#1b9e77">
+<h1>🎯 What are we aiming for?</h1>
 
 <img data-src="assets/screenshots/Rasmus-meditating-at-desk-with-laptop.png" alt="Person meditating at desk with laptop" class="r-stretch"></section>
+<section id="to-save-time-going-from-what-shall-we-have-for-lunch-to-order-placed." class="slide level2">
+<h2>To save time going from “What shall we have for lunch?” 🤔 to “Order placed.” ✅</h2>
 
-<section id="to-save-time-going-from-what-shall-we-have-for-lunch-to-order-placed." class="title-slide slide level1 center">
-<h1>To save time going from “What shall we have for lunch?” to “Order placed.”</h1>
-
-<img data-src="assets/screenshots/Rasmus-meditating-at-desk-with-laptop-smiling.png" alt="Person meditating at desk with laptop smiling" class="r-stretch"></section>
-
+<img data-src="assets/screenshots/Rasmus-meditating-at-desk-with-laptop-smiling.png" alt="Person meditating at desk with laptop smiling" class="r-stretch"></section></section>
 <section>
-<section id="what-shall-we-try-first" class="title-slide slide level1 center">
-<h1>What shall we try first?</h1>
+<section id="what-shall-we-try-first" class="title-slide slide level1 center" data-background-color="#d95f02">
+<h1>🤖 What shall we try first?</h1>
 
 </section>
 <section id="just-ask-copilot-in-ms-teams" class="slide level2">
@@ -175,129 +243,93 @@
 
 <img data-src="assets/screenshots/01.png" alt="Screenshot of MS Teams Copilot interface" class="r-stretch"></section>
 <section id="hmm-it-cant-create-the-poll" class="slide level2">
-<h2>Hmm, it can’t create the poll…</h2>
+<h2>Hmm, it can’t create the poll… 😬</h2>
 
 <img data-src="assets/screenshots/02.png" alt="Screenshot of MS Teams Copilot interface with lunch suggestions" class="r-stretch"></section>
 <section id="but-it-can-find-the-menu-right" class="slide level2">
-<h2>But it can find the menu, right?</h2>
+<h2>But it can find the menu, right? 🧐</h2>
 
 <img data-src="assets/screenshots/03.png" alt="Screenshot of MS Teams Copilot interface with menu suggestions" class="r-stretch"></section>
 <section id="but-it-can-find-the-menu-right-1" class="slide level2">
-<h2>But it can find the menu, RIGHT?</h2>
+<h2>But it can find the menu, RIGHT? 😰</h2>
 
 <img data-src="assets/screenshots/04.png" alt="Screenshot of MS Teams Copilot interface with menu suggestions" class="r-stretch"></section>
 <section id="wrong" class="slide level2">
-<h2>Wrong!</h2>
+<h2>Wrong! 🚫</h2>
 <p>The lunch menu has a smaller selection of burgers, and all go for 125 SEK.</p>
 <div class="cell">
 <iframe src="https://malmo.docksideburgers.se/lunchmeny/" width="960" height="500px" data-external="1">
 </iframe>
 </div>
+</section></section>
+<section id="so-copilot-in-ms-teams-cant-help-us-with-lunch-decisions-yet." class="title-slide slide level1 center" data-background-color="#7570b3">
+<h1>😞 So, Copilot in MS Teams can’t help us with lunch decisions yet.</h1>
+
+<img data-src="assets/screenshots/microsoft-teams-premium-copilot-1024x538.png" class="r-stretch"></section>
+
+<section>
+<section id="what-could-we-do-instead" class="title-slide slide level1 center" data-background-color="#e7298a">
+<h1>💡 What could we do instead?</h1>
+
 </section>
-<section id="a-template-is-only-useful-when-it-moves-quickly" class="slide level2">
-<h2>A template is only useful when it moves quickly</h2>
-<p>This starter deck is designed for sharp internal and client-facing presentations.</p>
+<section id="deterministic-approach" class="slide level2">
+<h2>Deterministic approach? 🔧</h2>
+<p>We could write a scraper to visit the restaurant websites, and extract the menu information from there.</p>
+<p>We could build a FastAPI app that serves the menu information in a structured format, and manually copy into a poll in MS Teams.</p>
+</section>
+<section id="where-does-this-solution-fail" class="slide level2">
+<h2>Where does this solution fail? 💥</h2>
+<p>The website menus are quite varied, for example,</p>
 <ul>
-<li>Use uppercase messaging for the strongest moments</li>
-<li>Keep layouts spacious and fast to scan</li>
-<li>Let accent color signal emphasis, not decorate everything</li>
+<li class="fragment"><p>Dockside’s menu is a PDF that updates monthly</p></li>
+<li class="fragment"><p>Holy Greens’ menu is a javascript page that shows available options and prices per restaurant location</p></li>
+<li class="fragment"><p>Reka’s Burgers menu is a static HTML page that hasn’t changed since last year</p></li>
+<li class="fragment"><p><strong>We could write custom scrapers for each restaurant, but that would be a lot of work, and would break easily if the website changes.</strong></p></li>
 </ul>
+</section>
+<section id="so-lets-try-giving-the-system-more-agency-to-achieve-specific-goals" class="slide level2">
+<h2>So, let’s try giving the system more agency to achieve specific goals 🚀</h2>
+<p>Follow along on Github at <a href="https://github.com/j-jayes/literate-broccoli">github.com/j-jayes/literate-broccoli</a></p>
 <div class="footer">
 <p><img data-src="assets/github_link.png"></p>
 </div>
-</section>
-<section id="point-of-view" class="slide level2 section-slide">
-<h2>POINT OF VIEW</h2>
-</section>
-<section id="built-for-clear-narrative-not-decorative-noise" class="slide level2">
-<h2>BUILT FOR CLEAR NARRATIVE, NOT DECORATIVE NOISE</h2>
-<div class="lede">
-<p>A Nexer slide should feel precise, modern, and intentional.</p>
-</div>
-<div class="columns">
-<div class="column" style="width:58%;">
-<h3 id="what-the-system-favors">What the system favors</h3>
-<ul>
-<li>Strong headline rhythm</li>
-<li>Short supporting copy</li>
-<li>High-contrast information design</li>
-<li>Controlled accent color</li>
-<li>Slides that survive both room presentation and PDF export</li>
-</ul>
-</div><div class="column" style="width:42%;">
-<div class="metric-card">
-<p><span class="metric-value">16:9</span> <span class="metric-label">Default widescreen frame</span></p>
-</div>
-</div></div>
-</section>
-<section id="two-speed-communication" class="slide level2">
-<h2>TWO-SPEED COMMUNICATION</h2>
-<div class="columns">
-<div class="column" style="width:52%;">
-<h3 id="message-first">Message first</h3>
-<p>Your opening line should carry the argument. The rest of the slide should only support it.</p>
-</div><div class="column" style="width:48%;">
-<h3 id="detail-second">Detail second</h3>
-<p>Use lists, comparison blocks, and speaker notes to add specificity without crowding the frame.</p>
-</div></div>
-</section>
-<section id="signal-emphasis-without-losing-restraint" class="slide level2">
-<h2>SIGNAL EMPHASIS WITHOUT LOSING RESTRAINT</h2>
-<div class="statement">
-<p>Most slides should stay black, white, and grey.</p>
-</div>
-<div class="accent-panel">
-<p>Use orange or warm red sparingly when a slide needs urgency, contrast, or a single focal point.</p>
-</div>
-</section>
-<section id="quote-or-positioning-slide" class="slide level2 quote-slide">
-<h2>QUOTE OR POSITIONING SLIDE</h2>
-<blockquote>
-<p>WE HELP ORGANIZATIONS MOVE FROM AMBITION TO EXECUTION WITHOUT LOSING CLARITY.</p>
-</blockquote>
-<div class="attribution">
-<p>Nexer presentation system</p>
-</div>
-</section>
-<section id="optional-visual-moment" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
-<h2>OPTIONAL VISUAL MOMENT</h2>
-<div class="inverse-block">
-<p><strong>Use this kind of slide sparingly</strong></p>
-<p>One strong visual interruption can reset attention and create a section break without turning the whole deck into a keynote imitation.</p>
-</div>
-</section>
-<section id="image-led-storytelling-without-clutter" class="slide level2">
-<h2>IMAGE-LED STORYTELLING WITHOUT CLUTTER</h2>
-<div class="columns">
-<div class="column" style="width:60%;">
-<div class="image-stage">
-<p><img data-src="assets/images/Women%20office%20iPad%203.jpeg" alt="Colleagues collaborating around a tablet"></p>
-<div class="image-stage__caption">
-<p><strong>Use photography with discipline</strong></p>
-<p>Pick one image with enough negative space for message hierarchy and keep overlays short.</p>
-</div>
-</div>
-</div><div class="column" style="width:40%;">
-<h3 id="what-makes-the-image-work">What makes the image work</h3>
-<ul>
-<li>Human focus without feeling like stock filler</li>
-<li>Space for a short argument on top</li>
-<li>Neutral enough to fit many team stories</li>
-<li>Strong contrast for black, white, and accent treatments</li>
-</ul>
-</div></div>
-</section>
-<section id="content-slide-with-footnotes-and-notes" class="slide level2 scrollable">
-<h2>CONTENT SLIDE WITH FOOTNOTES AND NOTES</h2>
-<h3 id="delivery-checklist">Delivery checklist</h3>
-<ul>
-<li>Keep each slide to one idea</li>
-<li>Prefer three strong bullets over seven weak ones</li>
-<li>Use the symbol as a complement, not a substitute for the logo<sup>1</sup></li>
-</ul>
+</section></section>
+<section>
+<section id="the-road-to-a-working-solution" class="title-slide slide level1 center" data-background-color="#1b9e77">
+<h1>🛤️ The Road to a Working Solution</h1>
 
+</section>
+<section id="copilot-studio-great-for-11-not-for-group-polls" class="slide level2">
+<h2>Copilot Studio: Great for 1:1, Not for Group Polls 🙅</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<ul>
+<li class="fragment">Built a Copilot Studio agent with MCP tool access</li>
+<li class="fragment">Works perfectly in a 1:1 conversation</li>
+<li class="fragment">Can search for menus, extract items, show results</li>
+<li class="fragment"><strong>Cannot create a poll in a group chat</strong></li>
+<li class="fragment">Lunch ordering is collaborative!</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    U("User") --&gt; CS("Copilot Studio")
+    CS --&gt; MCP("MCP Scraper")
+    CS -.-&gt;|"Cannot"| GP("Group Poll")
+    style GP stroke:#ff5028,stroke-dasharray: 5 5
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div></div>
 <aside class="notes">
-<p>Use speaker notes for examples, client specifics, or transition language.</p>
+<p>The Copilot Studio agent was good at the search and menu extraction part. But since it only talks 1:1, it couldn’t collect orders from the whole team. That’s a fundamental architecture limitation.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -309,19 +341,397 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-<aside><div>
-<p>This template keeps the demo mostly image-neutral so it remains reusable for many teams.</p>
-</div><ol class="aside-footnotes"><li id="fn1"><p>Keep the symbol as a supporting brand marker rather than a replacement for the wordmark.</p></li></ol></aside></section>
+</section>
+<section id="three-attempts-one-scraper" class="slide level2">
+<h2>Three Attempts, One Scraper 🔄</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    CS("Copilot Studio") --&gt; S("MCP Scraper")
+    TB("Teams Bot") --&gt; S
+    WA("Web App") --&gt; S
+    style S fill:#190878,color:#fff
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="accent-panel">
+<p>The Teams bot is not yet IT-approved — so today we demo the web app. But the scraper powering all three is identical.</p>
+</div>
+<aside class="notes">
+<p>The key takeaway here is that we wrote the scraper once as an MCP tool, and all three front-ends consume the same code. When we improve the scraper, all consumers benefit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="demo" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
+<h2>🍔 Demo</h2>
+<div class="inverse-block">
+<p><strong>Let’s see the web app in action.</strong></p>
+<p>Search for a restaurant, review the menu, create a poll, and place orders — all powered by the agentic scraper.</p>
+</div>
+</section></section>
+<section>
+<section id="how-does-the-scraper-work" class="title-slide slide level1 center" data-background-color="#d95f02">
+<h1>🕷️ How Does the Scraper Work?</h1>
+
+</section>
+<section id="an-llm-that-browses-like-you-do" class="slide level2 section-slide">
+<h2>🧠 An LLM That Browses Like You Do</h2>
+</section>
+<section id="traditional-scraper-vs.-agentic-scraper" class="slide level2">
+<h2>Traditional Scraper vs.&nbsp;Agentic Scraper ⚔️</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<h3 id="traditional">Traditional</h3>
+<ul>
+<li>Hardcoded URL per restaurant</li>
+<li>CSS or XPath selectors</li>
+<li>Breaks when the site changes</li>
+<li>One script per restaurant</li>
+</ul>
+</div><div class="column" style="width:48%;">
+<h3 id="agentic">Agentic</h3>
+<ul>
+<li>Starts from homepage or web search</li>
+<li>LLM reads the page and decides what to do</li>
+<li>Follows links to find the menu</li>
+<li><strong>Same code for every restaurant</strong></li>
+</ul>
+</div></div>
+</section>
+<section id="eight-steps-to-find-any-menu" class="slide level2">
+<h2>Eight Steps to Find Any Menu 🗺️</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    Start("Start URL or search") --&gt; Fetch("Fetch page")
+    Fetch --&gt; LLM("LLM reads page + links")
+    LLM --&gt;|"extract"| Done("Return menu items")
+    LLM --&gt;|"navigate"| Nav("Follow a link")
+    Nav --&gt; Fetch
+    LLM --&gt;|"search"| Search("Web search via Gemini")
+    Search --&gt; Fetch
+    LLM --&gt;|"fail"| Error("Raise error")
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>MAX_STEPS = 8 prevents infinite loops. Gemini handles the web search grounding, GPT-4o makes the navigation decisions. The LLM gets a text preview of the page plus all links and decides what action to take at each step.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="four-actions-one-decision-model" class="slide level2">
+<h2>Four Actions, One Decision Model 🎯</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href=""></a>MAX_STEPS <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb1-2"><a href=""></a></span>
+<span id="cb1-3"><a href=""></a><span class="kw">class</span> BrowseDecision(BaseModel):</span>
+<span id="cb1-4"><a href=""></a>    action: <span class="bu">str</span>   <span class="co"># "extract", "navigate", "search", "fail"</span></span>
+<span id="cb1-5"><a href=""></a>    reason: <span class="bu">str</span></span>
+<span id="cb1-6"><a href=""></a>    url: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span>    <span class="co"># for "navigate"</span></span>
+<span id="cb1-7"><a href=""></a>    query: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span>  <span class="co"># for "search"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<aside class="notes">
+<p>The action vocabulary is deliberately small — four verbs cover all navigation scenarios. The reason field is invaluable for debugging: you can see exactly why the LLM chose to navigate or extract at each step.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="pydantic-guarantees-the-output-shape" class="slide level2">
+<h2>Pydantic Guarantees the Output Shape 🔒</h2>
+<div class="columns">
+<div class="column" style="width:52%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="kw">class</span> MenuCategory(<span class="bu">str</span>, Enum):</span>
+<span id="cb2-2"><a href=""></a>    main <span class="op">=</span> <span class="st">"main"</span></span>
+<span id="cb2-3"><a href=""></a>    side <span class="op">=</span> <span class="st">"side"</span></span>
+<span id="cb2-4"><a href=""></a>    drink <span class="op">=</span> <span class="st">"drink"</span></span>
+<span id="cb2-5"><a href=""></a>    dessert <span class="op">=</span> <span class="st">"dessert"</span></span>
+<span id="cb2-6"><a href=""></a>    other <span class="op">=</span> <span class="st">"other"</span></span>
+<span id="cb2-7"><a href=""></a></span>
+<span id="cb2-8"><a href=""></a><span class="kw">class</span> ExtractedMenuItem(BaseModel):</span>
+<span id="cb2-9"><a href=""></a>    name: <span class="bu">str</span></span>
+<span id="cb2-10"><a href=""></a>    price: Optional[Decimal] <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb2-11"><a href=""></a>    category: MenuCategory</span>
+<span id="cb2-12"><a href=""></a>    description: Optional[<span class="bu">str</span>] <span class="op">=</span> <span class="va">None</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:48%;">
+<ul>
+<li class="fragment">LLM output validated automatically</li>
+<li class="fragment">Categories enforce consistent grouping</li>
+<li class="fragment">Frontend can rely on the shape</li>
+<li class="fragment">Adding a restaurant = zero code changes</li>
+<li class="fragment">Price normalization handles “125:-”, “125 kr”, “125 SEK”</li>
+</ul>
+</div></div>
+</section></section>
+<section>
+<section id="what-is-mcp" class="title-slide slide level1 center" data-background-color="#7570b3">
+<h1>🔌 What is MCP?</h1>
+
+</section>
+<section id="usb-c-for-ai-applications" class="slide level2 section-slide">
+<h2>🔌 USB-C for AI Applications</h2>
+</section>
+<section id="mcp-connects-ai-apps-to-tools-and-data" class="slide level2">
+<h2>MCP Connects AI Apps to Tools and Data 🌐</h2>
+<div class="lede">
+<p>Model Context Protocol is an open standard that lets any AI client call any tool through a shared interface — like USB-C for AI.</p>
+</div>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    H("AI App - Host") --&gt; C("MCP Client")
+    C --&gt; S("MCP Server")
+    S --&gt; T("Tools")
+    S --&gt; D("Data Sources")
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<!-- IMAGE: You can replace this mermaid with a screenshot from modelcontextprotocol.io showing their architecture diagram. Save to assets/screenshots/mcp-architecture.png and use: ![](assets/screenshots/mcp-architecture.png) -->
+<aside class="notes">
+<p>MCP was created by Anthropic and open-sourced. Think of it like USB-C: you define your tool once, expose it over HTTP or stdio, and any MCP-compatible client can use it. No custom integration per client.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="mcp-has-broad-ecosystem-support" class="slide level2">
+<h2>MCP Has Broad Ecosystem Support 🌍</h2>
+<div class="statement">
+<p>Supported by Claude, ChatGPT, VS Code, Cursor, and many more.</p>
+</div>
+<ul>
+<li class="fragment">Define your tool once with input and output schemas</li>
+<li class="fragment">Expose it over HTTP or stdio</li>
+<li class="fragment">Any MCP-compatible client can call it</li>
+<li class="fragment">No custom integration code per consumer</li>
+</ul>
+<!-- IMAGE: You can add an ecosystem logos graphic here. Save to assets/screenshots/mcp-ecosystem.png and use: ![](assets/screenshots/mcp-ecosystem.png) -->
+</section>
+<section id="fastmcp-makes-it-trivial" class="slide level2">
+<h2>FastMCP Makes It Trivial ⚡</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">from</span> fastmcp <span class="im">import</span> FastMCP</span>
+<span id="cb3-2"><a href=""></a><span class="im">from</span> src.tools.menu <span class="im">import</span> get_restaurant_menu</span>
+<span id="cb3-3"><a href=""></a></span>
+<span id="cb3-4"><a href=""></a>mcp <span class="op">=</span> FastMCP(<span class="st">"lunch-menu-poll"</span>)</span>
+<span id="cb3-5"><a href=""></a></span>
+<span id="cb3-6"><a href=""></a><span class="at">@mcp.tool</span></span>
+<span id="cb3-7"><a href=""></a><span class="cf">async</span> <span class="kw">def</span> get_menu_poll(</span>
+<span id="cb3-8"><a href=""></a>    restaurant_name: <span class="bu">str</span>,</span>
+<span id="cb3-9"><a href=""></a>    menu_url: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,</span>
+<span id="cb3-10"><a href=""></a>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb3-11"><a href=""></a>    <span class="co">"""Fetch a restaurant's menu and</span></span>
+<span id="cb3-12"><a href=""></a><span class="co">    return an Adaptive Card poll."""</span></span>
+<span id="cb3-13"><a href=""></a>    <span class="cf">return</span> <span class="cf">await</span> get_restaurant_menu(</span>
+<span id="cb3-14"><a href=""></a>        restaurant_name,</span>
+<span id="cb3-15"><a href=""></a>        menu_url<span class="op">=</span>menu_url <span class="kw">or</span> <span class="va">None</span>,</span>
+<span id="cb3-16"><a href=""></a>    )</span>
+<span id="cb3-17"><a href=""></a></span>
+<span id="cb3-18"><a href=""></a>app <span class="op">=</span> mcp.http_app()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:45%;">
+<div class="metric-card">
+<p><span class="metric-value">23.5k</span> <span class="metric-label">GitHub stars</span></p>
+</div>
+<div class="metric-card">
+<p><span class="metric-value">70%</span> <span class="metric-label">of MCP servers use FastMCP</span></p>
+</div>
+</div></div>
+<!-- IMAGE: You can add a FastMCP GitHub screenshot here. Save to assets/screenshots/fastmcp-github.png -->
+<aside class="notes">
+<p>This is the entire MCP server. FastMCP handles protocol negotiation, schema generation from type hints, and HTTP transport. The <span class="citation" data-cites="mcp.tool">@mcp.tool</span> decorator is all you need. The docstring becomes the tool description that LLMs see when deciding whether to call it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="one-codebase-three-front-doors" class="slide level2">
+<h2>One Codebase, Three Front Doors 🚪🚪🚪</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph Consumers
+        CS("Copilot Studio")
+        TB("Teams Bot")
+        WA("Web App")
+    end
+    subgraph MCP
+        Tool("get_menu_poll")
+    end
+    subgraph Scraper
+        Browse("browse_and_extract")
+        Extract("extract_menu")
+        Models("Pydantic models")
+    end
+    CS --&gt; Tool
+    TB --&gt; Tool
+    WA --&gt; Tool
+    Tool --&gt; Browse
+    Browse --&gt; Extract
+    Extract --&gt; Models
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<aside class="notes">
+<p>This is the full architecture. All three consumers call the same MCP tool. The scraper handles the browsing, extraction, and validation. Improve the scraper once, and Copilot Studio, the Teams bot, and the web app all benefit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="shipping-it" class="title-slide slide level1 center" data-background-color="#e7298a">
+<h1>📦 Shipping It</h1>
+
+</section>
+<section id="one-dockerfile-from-code-to-cloud" class="slide level2">
+<h2>One Dockerfile, From Code to Cloud 🐳</h2>
+<div class="columns">
+<div class="column" style="width:52%;">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource dockerfile number-lines code-with-copy"><code class="sourceCode dockerfile"><span id="cb4-1"><a href=""></a><span class="co"># Stage 1: Build React frontend</span></span>
+<span id="cb4-2"><a href=""></a><span class="kw">FROM</span> node:20-alpine <span class="kw">AS</span> frontend-build</span>
+<span id="cb4-3"><a href=""></a><span class="kw">COPY</span> lunch-web-app/frontend/ ./</span>
+<span id="cb4-4"><a href=""></a><span class="kw">RUN</span> <span class="ex">npm</span> ci <span class="kw">&amp;&amp;</span> <span class="ex">npm</span> run build</span>
+<span id="cb4-5"><a href=""></a></span>
+<span id="cb4-6"><a href=""></a><span class="co"># Stage 2: Python backend + static files</span></span>
+<span id="cb4-7"><a href=""></a><span class="kw">FROM</span> python:3.12-slim</span>
+<span id="cb4-8"><a href=""></a><span class="kw">COPY</span> requirements.txt ./</span>
+<span id="cb4-9"><a href=""></a><span class="kw">RUN</span> <span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb4-10"><a href=""></a><span class="kw">COPY</span> src/ ./src/</span>
+<span id="cb4-11"><a href=""></a><span class="kw">COPY</span> lunch-web-app/backend/ ./backend/</span>
+<span id="cb4-12"><a href=""></a><span class="kw">COPY</span> <span class="op">--from=frontend-build</span> /dist ./frontend/dist</span>
+<span id="cb4-13"><a href=""></a></span>
+<span id="cb4-14"><a href=""></a><span class="kw">CMD</span> [<span class="st">"uvicorn"</span>, <span class="st">"backend.main:app"</span>,</span>
+<span id="cb4-15"><a href=""></a>     <span class="st">"--host"</span>, <span class="st">"0.0.0.0"</span>, <span class="st">"--port"</span>, <span class="st">"8000"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div><div class="column" style="width:48%;">
+<ul>
+<li class="fragment">Multi-stage build: Node for frontend, Python for backend</li>
+<li class="fragment">Final image has no Node.js — just Python + static files</li>
+<li class="fragment">Push to Azure Container Registry</li>
+<li class="fragment">Azure Container Apps handles scaling and TLS</li>
+<li class="fragment">Environment variables for API keys via secrets</li>
+</ul>
+</div></div>
+<aside class="notes">
+<p>The multi-stage Dockerfile builds the React frontend with Node, then copies the compiled static files into a slim Python image. The final image is small and only runs uvicorn. Azure Container Apps gives us managed scaling, TLS, and secret management with zero infrastructure to maintain.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section>
+<section id="what-did-we-learn" class="title-slide slide level1 center" data-background-color="#1b9e77">
+<h1>🎓 What Did We Learn?</h1>
+
+</section>
+<section id="three-ideas-to-take-with-you" class="slide level2">
+<h2>Three Ideas to Take With You 💡</h2>
+<div class="columns">
+<div class="column" style="width:33%;">
+<div class="metric-card">
+<p><span class="metric-value">Agency</span> <span class="metric-label">Let LLMs navigate, not just parse</span></p>
+</div>
+</div><div class="column" style="width:33%;">
+<div class="metric-card">
+<p><span class="metric-value">MCP</span> <span class="metric-label">Build once, connect everywhere</span></p>
+</div>
+</div><div class="column" style="width:33%;">
+<div class="metric-card">
+<p><span class="metric-value">Pydantic</span> <span class="metric-label">Structured outputs you can trust</span></p>
+</div>
+</div></div>
+</section>
+<section id="thank-you-questions" class="slide level2">
+<h2>Thank You — Questions? 🙏</h2>
+<p>Follow along on Github at <a href="https://github.com/j-jayes/literate-broccoli">github.com/j-jayes/literate-broccoli</a></p>
+<div class="footer">
+<p><img data-src="assets/github_link.png"></p>
+</div>
+</section>
 <section id="closing-slide" class="slide level2" data-footer="false">
 <h2>CLOSING SLIDE</h2>
 <div class="closing-mark">
-<p><img data-src="_extensions/nexer/nexer-symbol-black.svg" alt="Nexer symbol"></p>
+<p><img data-src="_extensions/j-jayes/nexer/nexer-symbol-black.svg" alt="Nexer symbol"></p>
 </div>
-<h3 id="ready-to-adapt">READY TO ADAPT</h3>
-<p>Swap the message, keep the structure, and render.</p>
+<h3 id="ctl-alt-delish">CTL + ALT + DELISH</h3>
+<p>Built with FastMCP, FastAPI, and React.</p>
 
 </section></section>
-
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <p><img src="_extensions/j-jayes/nexer/nexer-logo-black.svg" class="slide-logo"></p>
