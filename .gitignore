@@ -18,6 +18,8 @@ lib/
 lib64/
 parts/
 sdist/
+!docs/index_files/libs/revealjs/dist/
+!docs/index_files/libs/revealjs/dist/**
 var/
 wheels/
 pip-wheel-metadata/
