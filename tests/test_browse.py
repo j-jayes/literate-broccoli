@@ -65,19 +65,19 @@ class TestParseDecision:
 
 class TestBuildUserPrompt:
     def test_contains_restaurant_name(self):
-        prompt = _build_user_prompt("Pizza Place", "https://example.com", "some text", [], set())
+        prompt = _build_user_prompt("Pizza Place", "https://example.com", "some text", [], [], set(), [])
         assert "Pizza Place" in prompt
         assert "https://example.com" in prompt
 
     def test_contains_links(self):
         links = [{"url": "https://example.com/menu", "text": "Menu"}]
-        prompt = _build_user_prompt("Test", "https://example.com", "text", links, set())
+        prompt = _build_user_prompt("Test", "https://example.com", "text", links, [], set(), [])
         assert "https://example.com/menu" in prompt
         assert "Menu" in prompt
 
     def test_shows_visited_urls(self):
         visited = {"https://example.com/old"}
-        prompt = _build_user_prompt("Test", "https://example.com", "text", [], visited)
+        prompt = _build_user_prompt("Test", "https://example.com", "text", [], [], visited, [])
         assert "https://example.com/old" in prompt
 
 

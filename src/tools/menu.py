@@ -11,7 +11,6 @@ import logging
 from typing import Any, Optional
 
 from src.cards.poll import build_poll_card
-from src.config import settings
 from src.scraper.browse import browse_and_extract
 
 logger = logging.getLogger(__name__)
@@ -30,7 +29,7 @@ async def get_restaurant_menu(
     Args:
         restaurant_name: The name of the restaurant (e.g. "Pizzeria Napoli").
         menu_url: Starting URL (homepage or menu page). If not provided,
-                  Bing Search is used (requires BING_SEARCH_API_KEY).
+                  Gemini + Google Search is used (requires GOOGLE_API_KEY).
 
     Returns:
         An Adaptive Card JSON object with menu items as poll choices.
@@ -40,13 +39,9 @@ async def get_restaurant_menu(
     # 1. Resolve starting URL
     if menu_url:
         start_url = menu_url
-    elif settings.bing_search_api_key:
-        from src.scraper.search import search_menu_url
-        start_url = await search_menu_url(restaurant_name)
     else:
-        raise RuntimeError(
-            "Please provide a menu_url, or set BING_SEARCH_API_KEY to enable web search."
-        )
+        from src.scraper.search_restaurants import search_restaurant_url
+        start_url = await search_restaurant_url(restaurant_name)
     logger.info("Starting URL: %s", start_url)
 
     # 2. Browse the website and extract menu items

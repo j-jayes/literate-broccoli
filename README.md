@@ -32,12 +32,11 @@ Set these in `.env`:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `BING_SEARCH_API_KEY` | Yes | Azure Bing Search API key |
+| `GOOGLE_API_KEY` | Yes | Google Gemini API key (used for search + LLM fallback) |
 | `AZURE_OPENAI_ENDPOINT` | Recommended | Azure OpenAI endpoint URL |
 | `AZURE_OPENAI_API_KEY` | Recommended | Azure OpenAI API key |
 | `AZURE_OPENAI_DEPLOYMENT` | Recommended | Model deployment name (default: gpt-4o) |
 | `OPENAI_API_KEY` | Fallback | OpenAI API key (used if Azure fails) |
-| `GOOGLE_API_KEY` | Fallback | Google Gemini API key (last resort) |
 
 The LLM provider fallback chain: Azure OpenAI -> OpenAI -> Google Gemini.
 

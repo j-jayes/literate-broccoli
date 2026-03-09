@@ -1,0 +1,140 @@
+---
+title: "NEXER REVEALJS TEMPLATE"
+subtitle: "Quarto presentation starter"
+author: "Your Name"
+date: today
+format:
+  nexer-revealjs: default
+---
+
+## A template is only useful when it moves quickly
+
+This starter deck is designed for sharp internal and client-facing presentations.
+
+- Use uppercase messaging for the strongest moments
+- Keep layouts spacious and fast to scan
+- Let accent color signal emphasis, not decorate everything
+
+::: footer
+A reusable Quarto RevealJS presentation for Nexer
+:::
+
+## POINT OF VIEW {.section-slide}
+
+## BUILT FOR CLEAR NARRATIVE, NOT DECORATIVE NOISE
+
+::: {.lede}
+A Nexer slide should feel precise, modern, and intentional.
+:::
+
+:::: {.columns}
+::: {.column width="58%"}
+### What the system favors
+
+- Strong headline rhythm
+- Short supporting copy
+- High-contrast information design
+- Controlled accent color
+- Slides that survive both room presentation and PDF export
+:::
+
+::: {.column width="42%"}
+::: {.metric-card}
+<span class="metric-value">16:9</span>
+<span class="metric-label">Default widescreen frame</span>
+:::
+:::
+::::
+
+## TWO-SPEED COMMUNICATION
+
+:::: {.columns}
+::: {.column width="52%"}
+### Message first
+
+Your opening line should carry the argument. The rest of the slide should only support it.
+:::
+
+::: {.column width="48%"}
+### Detail second
+
+Use lists, comparison blocks, and speaker notes to add specificity without crowding the frame.
+:::
+::::
+
+## SIGNAL EMPHASIS WITHOUT LOSING RESTRAINT
+
+::: {.statement}
+Most slides should stay black, white, and grey.
+:::
+
+::: {.accent-panel}
+Use orange or warm red sparingly when a slide needs urgency, contrast, or a single focal point.
+:::
+
+## QUOTE OR POSITIONING SLIDE {.quote-slide}
+
+> WE HELP ORGANIZATIONS MOVE FROM AMBITION TO EXECUTION WITHOUT LOSING CLARITY.
+
+::: {.attribution}
+Nexer presentation system
+:::
+
+## OPTIONAL VISUAL MOMENT {background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)"}
+
+::: {.inverse-block}
+**Use this kind of slide sparingly**
+
+One strong visual interruption can reset attention and create a section break without turning the whole deck into a keynote imitation.
+:::
+
+## IMAGE-LED STORYTELLING WITHOUT CLUTTER
+
+:::: {.columns}
+::: {.column width="60%"}
+::: {.image-stage}
+![](assets/images/Women office iPad 3.jpeg){fig-alt="Colleagues collaborating around a tablet"}
+
+::: {.image-stage__caption}
+**Use photography with discipline**
+
+Pick one image with enough negative space for message hierarchy and keep overlays short.
+:::
+:::
+:::
+
+::: {.column width="40%"}
+### What makes the image work
+
+- Human focus without feeling like stock filler
+- Space for a short argument on top
+- Neutral enough to fit many team stories
+- Strong contrast for black, white, and accent treatments
+:::
+::::
+
+## CONTENT SLIDE WITH FOOTNOTES AND NOTES
+
+### Delivery checklist
+
+- Keep each slide to one idea
+- Prefer three strong bullets over seven weak ones
+- Use the symbol as a complement, not a substitute for the logo^[Keep the symbol as a supporting brand marker rather than a replacement for the wordmark.]
+
+::: aside
+This template keeps the demo mostly image-neutral so it remains reusable for many teams.
+:::
+
+::: {.notes}
+Use speaker notes for examples, client specifics, or transition language.
+:::
+
+## CLOSING SLIDE {footer=false}
+
+::: {.closing-mark}
+![](_extensions/nexer/nexer-symbol-black.svg){fig-alt="Nexer symbol"}
+:::
+
+### READY TO ADAPT
+
+Swap the message, keep the structure, and render.

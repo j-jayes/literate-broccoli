@@ -1,0 +1,23 @@
+# Large directories not needed for Docker build
+.git
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+
+# Frontend node_modules (npm ci runs inside Docker)
+lunch-web-app/frontend/node_modules
+lunch-web-app/frontend/dist
+teams-lunch-bot/node_modules
+
+# Data and local files
+data/
+*.sqlite
+*.db
+
+# IDE
+.vscode
+.idea
+
+# Env files (secrets passed via container env vars)
+.env

@@ -20,7 +20,11 @@ SYSTEM_PROMPT = (
     "category must be one of: main, side, drink, dessert, other. "
     "If the price is not present, return price=null. "
     "If the price is present, return it as a number without currency symbols. "
-    "Prices may appear as '125:-', '125 kr', '125 SEK', or just '125'."
+    "Prices may appear as '125:-', '125 kr', '125 SEK', or just '125'. "
+    "IMPORTANT: When a category header (e.g. 'Dips', 'Milkshakes', 'Sauces') "
+    "is followed by a list of flavours or varieties, create a SEPARATE item for "
+    "each individual flavour/variety (e.g. 'Dips - Garlic Mayo', 'Dips - BBQ Sauce'). "
+    "Do NOT group them under a single item."
 )
 
 

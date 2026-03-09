@@ -18,13 +18,9 @@ class Settings(BaseSettings):
     openai_api_key: Optional[str] = None
     openai_model: str = "gpt-4o-mini"
 
-    # Google Gemini (second fallback)
+    # Google Gemini (search + LLM fallback)
     google_api_key: Optional[str] = None
     gemini_model: str = "gemini-2.5-flash"
-
-    # Bing Search
-    bing_search_api_key: Optional[str] = None
-    bing_search_endpoint: str = "https://api.bing.microsoft.com/v7.0/search"
 
     # Server
     mcp_server_name: str = "lunch-menu-poll"

@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/types.ts","./src/components/adminpanel.tsx","./src/components/authgate.tsx","./src/components/csvbutton.tsx","./src/components/menureview.tsx","./src/components/orderlist.tsx","./src/components/pollpage.tsx","./src/hooks/useauth.ts","./src/hooks/usesse.ts"],"version":"5.9.3"}
