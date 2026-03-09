@@ -1,140 +1,107 @@
 ---
-title: "NEXER REVEALJS TEMPLATE"
-subtitle: "Quarto presentation starter"
-author: "Your Name"
+title: "CTL + ALT + DELISH"
+subtitle: "Lunch and Learn"
+author: "Jonathan Jayes"
 date: today
 format:
   nexer-revealjs: default
 ---
 
-## A template is only useful when it moves quickly
+# What are we aiming for?
 
-This starter deck is designed for sharp internal and client-facing presentations.
+![](assets/screenshots/Rasmus-meditating-at-desk-with-laptop.png){fig-alt="Person meditating at desk with laptop"}
 
-- Use uppercase messaging for the strongest moments
-- Keep layouts spacious and fast to scan
-- Let accent color signal emphasis, not decorate everything
+## To save time going from "What shall we have for lunch?" to "Order placed."
+
+![](assets/screenshots/Rasmus-meditating-at-desk-with-laptop-smiling.png){fig-alt="Person meditating at desk with laptop smiling"}
+
+# What shall we try first?
+
+## Just ask Copilot in MS Teams
+
+![](assets/screenshots/01.png){fig-alt="Screenshot of MS Teams Copilot interface"}
+
+## Hmm, it can't create the poll...
+
+![](assets/screenshots/02.png){fig-alt="Screenshot of MS Teams Copilot interface with lunch suggestions"}
+
+## But it can find the menu, right?
+
+![](assets/screenshots/03.png){fig-alt="Screenshot of MS Teams Copilot interface with menu suggestions"}
+
+
+## But it can find the menu, RIGHT?
+
+![](assets/screenshots/04.png){fig-alt="Screenshot of MS Teams Copilot interface with menu suggestions"}
+
+## Wrong!
+
+The lunch menu has a smaller selection of burgers, and all go for 125 SEK.
+
+```{r}
+knitr::include_url("https://malmo.docksideburgers.se/lunchmeny/", height = "500px")
+
+```
+
+# So, Copilot in MS Teams can't help us with lunch decisions yet.
+
+![](assets/screenshots/microsoft-teams-premium-copilot-1024x538.png)
+
+# What could we do instead?
+
+## Deterministic approach?
+
+We could write a scraper to visit the restaurant websites, and extract the menu information from there.
+
+We could build a FastAPI app that serves the menu information in a structured format, and manually copy into a poll in MS Teams.
+
+## Where does this solution fail?
+
+The website menus are quite varied, for example, 
+
+::: {.incremental}
+
+- Dockside's menu is a PDF that updates monthly
+
+- Holy Greens' menu is a javascript page that shows available options and prices per restaurant location
+
+- Reka's Burgers menu is a static HTML page that hasn't changed since last year
+
+- **We could write custom scrapers for each restaurant, but that would be a lot of work, and would break easily if the website changes.**
+
+:::
+
+
+## So, let's try giving the system more agency to achieve specific goals
+
+Follow along on Github at [github.com/j-jayes/literate-broccoli](https://github.com/j-jayes/literate-broccoli)
 
 ::: footer
-A reusable Quarto RevealJS presentation for Nexer
+![](assets/github_link.png)
 :::
 
-## POINT OF VIEW {.section-slide}
+# Section on the scraper
 
-## BUILT FOR CLEAR NARRATIVE, NOT DECORATIVE NOISE
+Here we explain how we use the scraper that is flexible, searches for the restauran't lunch menu, and extracts the relevant information. Here the flexibility is provided by Gemini as an LLM, which can understand the structure of the website, and extract the relevant information, even if the website changes.
 
-::: {.lede}
-A Nexer slide should feel precise, modern, and intentional.
-:::
+Here we also want to explain how the flexibility is a benefit, and how it allows us to easily add new restaurants to the system.
 
-:::: {.columns}
-::: {.column width="58%"}
-### What the system favors
+It should be clear that this scraper is deployed as an MCP server that is called on by the Copilot Studio agent, and that the agent is responsible for deciding when to call the scraper, and how to use the information it returns.
 
-- Strong headline rhythm
-- Short supporting copy
-- High-contrast information design
-- Controlled accent color
-- Slides that survive both room presentation and PDF export
-:::
+It should also be clear that this scraper is used in the solution with the frontend and backend, inside `lunch-web-app`, and that because our MCP server is written in FastMCP, we can easily integrate it with our FastAPI backend, and use the same codebase for both the scraper and the backend.
 
-::: {.column width="42%"}
-::: {.metric-card}
-<span class="metric-value">16:9</span>
-<span class="metric-label">Default widescreen frame</span>
-:::
-:::
-::::
+We should talk about the value of a pydantic data model for the output schema, and how it allows us to easily validate the output of the scraper, and ensure that it is in the correct format for the frontend to use, e.g. classifying the menu items into categories like mains, sides, drinks, and ensuring that the prices are in the correct format.
 
-## TWO-SPEED COMMUNICATION
+# Section explaining the value of MCP in this instance
 
-:::: {.columns}
-::: {.column width="52%"}
-### Message first
+Explaining what Model Context Protocol is from Anthropic, and how it has risen to popularity. 
 
-Your opening line should carry the argument. The rest of the slide should only support it.
-:::
+Explanation of the MCP adk, and then FastMCP, which is a Python library that makes it easy to create MCP servers, and define input and output schemas using pydantic models.
 
-::: {.column width="48%"}
-### Detail second
+Short code section showing in the slides the code needed to make the scraper an MCP server, and how to define the input and output schemas, as a way to explain MCP. 
 
-Use lists, comparison blocks, and speaker notes to add specificity without crowding the frame.
-:::
-::::
+# Section on deploying the solution
 
-## SIGNAL EMPHASIS WITHOUT LOSING RESTRAINT
+Talk about Azure container apps, and how we can easily deploy our FastAPI backend and MCP server to Azure, and how we can use Azure's managed services to handle scaling and load balancing.
 
-::: {.statement}
-Most slides should stay black, white, and grey.
-:::
-
-::: {.accent-panel}
-Use orange or warm red sparingly when a slide needs urgency, contrast, or a single focal point.
-:::
-
-## QUOTE OR POSITIONING SLIDE {.quote-slide}
-
-> WE HELP ORGANIZATIONS MOVE FROM AMBITION TO EXECUTION WITHOUT LOSING CLARITY.
-
-::: {.attribution}
-Nexer presentation system
-:::
-
-## OPTIONAL VISUAL MOMENT {background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)"}
-
-::: {.inverse-block}
-**Use this kind of slide sparingly**
-
-One strong visual interruption can reset attention and create a section break without turning the whole deck into a keynote imitation.
-:::
-
-## IMAGE-LED STORYTELLING WITHOUT CLUTTER
-
-:::: {.columns}
-::: {.column width="60%"}
-::: {.image-stage}
-![](assets/images/Women office iPad 3.jpeg){fig-alt="Colleagues collaborating around a tablet"}
-
-::: {.image-stage__caption}
-**Use photography with discipline**
-
-Pick one image with enough negative space for message hierarchy and keep overlays short.
-:::
-:::
-:::
-
-::: {.column width="40%"}
-### What makes the image work
-
-- Human focus without feeling like stock filler
-- Space for a short argument on top
-- Neutral enough to fit many team stories
-- Strong contrast for black, white, and accent treatments
-:::
-::::
-
-## CONTENT SLIDE WITH FOOTNOTES AND NOTES
-
-### Delivery checklist
-
-- Keep each slide to one idea
-- Prefer three strong bullets over seven weak ones
-- Use the symbol as a complement, not a substitute for the logo^[Keep the symbol as a supporting brand marker rather than a replacement for the wordmark.]
-
-::: aside
-This template keeps the demo mostly image-neutral so it remains reusable for many teams.
-:::
-
-::: {.notes}
-Use speaker notes for examples, client specifics, or transition language.
-:::
-
-## CLOSING SLIDE {footer=false}
-
-::: {.closing-mark}
-![](_extensions/nexer/nexer-symbol-black.svg){fig-alt="Nexer symbol"}
-:::
-
-### READY TO ADAPT
-
-Swap the message, keep the structure, and render.
+# Concluding section on what did we learn
