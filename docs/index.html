@@ -274,8 +274,7 @@
 </section>
 <section id="deterministic-approach" class="slide level2">
 <h2>Deterministic approach? 🔧</h2>
-<p>We could write a scraper to visit the restaurant websites, and extract the menu information from there.</p>
-<p>We could build a FastAPI app that serves the menu information in a structured format, and manually copy into a poll in MS Teams.</p>
+<h3 id="we-could-write-a-scraper-to-visit-the-restaurant-websites-and-extract-the-menu-information-from-there.">We could write a scraper to visit the restaurant websites, and extract the menu information from there.</h3>
 </section>
 <section id="where-does-this-solution-fail" class="slide level2">
 <h2>Where does this solution fail? 💥</h2>
@@ -298,84 +297,6 @@
 <section id="the-road-to-a-working-solution" class="title-slide slide level1 center" data-background-color="#1b9e77">
 <h1>🛤️ The Road to a Working Solution</h1>
 
-</section>
-<section id="copilot-studio-great-for-11-not-for-group-polls" class="slide level2">
-<h2>Copilot Studio: Great for 1:1, Not for Group Polls 🙅</h2>
-<div class="columns">
-<div class="column" style="width:55%;">
-<ul>
-<li class="fragment">Built a Copilot Studio agent with MCP tool access</li>
-<li class="fragment">Works perfectly in a 1:1 conversation</li>
-<li class="fragment">Can search for menus, extract items, show results</li>
-<li class="fragment"><strong>Cannot create a poll in a group chat</strong></li>
-<li class="fragment">Lunch ordering is collaborative!</li>
-</ul>
-</div><div class="column" style="width:45%;">
-<div class="cell" data-reveal="true" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    U("User") --&gt; CS("Copilot Studio")
-    CS --&gt; MCP("MCP Scraper")
-    CS -.-&gt;|"Cannot"| GP("Group Poll")
-    style GP stroke:#ff5028,stroke-dasharray: 5 5
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-</div></div>
-<aside class="notes">
-<p>The Copilot Studio agent was good at the search and menu extraction part. But since it only talks 1:1, it couldn’t collect orders from the whole team. That’s a fundamental architecture limitation.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="three-attempts-one-scraper" class="slide level2">
-<h2>Three Attempts, One Scraper 🔄</h2>
-<div class="cell" data-reveal="true" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    CS("Copilot Studio") --&gt; S("MCP Scraper")
-    TB("Teams Bot") --&gt; S
-    WA("Web App") --&gt; S
-    style S fill:#190878,color:#fff
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<div class="accent-panel">
-<p>The Teams bot is not yet IT-approved — so today we demo the web app. But the scraper powering all three is identical.</p>
-</div>
-<aside class="notes">
-<p>The key takeaway here is that we wrote the scraper once as an MCP tool, and all three front-ends consume the same code. When we improve the scraper, all consumers benefit.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 </section>
 <section id="demo-web-app" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
 <h2>🍔 Demo: Web App</h2>
@@ -761,7 +682,7 @@
       }</style></aside>
 </section>
 <section id="one-codebase-three-front-doors" class="slide level2">
-<h2>One Codebase, Three Front Doors 🚪🚪🚪</h2>
+<h2>One Codebase, Three Front Doors</h2>
 <div class="cell" data-reveal="true" data-layout-align="default">
 <div class="cell-output-display">
 <div>
@@ -890,6 +811,89 @@
 </div>
 <h3 id="ctl-alt-delish">CTL + ALT + DELISH</h3>
 <p>Built with FastMCP, FastAPI, and React.</p>
+</section></section>
+<section>
+<section id="appendix" class="title-slide slide level1 center" data-background-color="#d95f02">
+<h1>Appendix</h1>
+
+</section>
+<section id="copilot-studio-great-for-11-not-for-group-polls" class="slide level2" data-visibility="uncounted">
+<h2>Copilot Studio: Great for 1:1, Not for Group Polls 🙅</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<ul>
+<li class="fragment">Built a Copilot Studio agent with MCP tool access</li>
+<li class="fragment">Works perfectly in a 1:1 conversation</li>
+<li class="fragment">Can search for menus, extract items, show results</li>
+<li class="fragment"><strong>Cannot create a poll in a group chat</strong></li>
+<li class="fragment">Lunch ordering is collaborative!</li>
+</ul>
+</div><div class="column" style="width:45%;">
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    U("User") --&gt; CS("Copilot Studio")
+    CS --&gt; MCP("MCP Scraper")
+    CS -.-&gt;|"Cannot"| GP("Group Poll")
+    style GP stroke:#ff5028,stroke-dasharray: 5 5
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</div></div>
+<aside class="notes">
+<p>The Copilot Studio agent was good at the search and menu extraction part. But since it only talks 1:1, it couldn’t collect orders from the whole team. That’s a fundamental architecture limitation.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="three-attempts-one-scraper" class="slide level2" data-visibility="uncounted">
+<h2>Three Attempts, One Scraper 🔄</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    CS("Copilot Studio") --&gt; S("MCP Scraper")
+    TB("Teams Bot") --&gt; S
+    WA("Web App") --&gt; S
+    style S fill:#190878,color:#fff
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="accent-panel">
+<p>The Teams bot is not yet IT-approved — so today we demo the web app. But the scraper powering all three is identical.</p>
+</div>
+<aside class="notes">
+<p>The key takeaway here is that we wrote the scraper once as an MCP tool, and all three front-ends consume the same code. When we improve the scraper, all consumers benefit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 
 </section></section>
     </div>

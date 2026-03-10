@@ -51,9 +51,7 @@ knitr::include_url("https://malmo.docksideburgers.se/lunchmeny/", height = "500p
 
 ## Deterministic approach? 🔧
 
-We could write a scraper to visit the restaurant websites, and extract the menu information from there.
-
-We could build a FastAPI app that serves the menu information in a structured format, and manually copy into a poll in MS Teams.
+### We could write a scraper to visit the restaurant websites, and extract the menu information from there.
 
 ## Where does this solution fail? 💥
 
@@ -83,54 +81,6 @@ Follow along on Github at [github.com/j-jayes/literate-broccoli](https://github.
 
 # 🛤️ The Road to a Working Solution {background-color="#1b9e77"}
 
-## Copilot Studio: Great for 1:1, Not for Group Polls 🙅
-
-:::: {.columns}
-::: {.column width="55%"}
-::: {.incremental}
-
-- Built a Copilot Studio agent with MCP tool access
-- Works perfectly in a 1:1 conversation
-- Can search for menus, extract items, show results
-- **Cannot create a poll in a group chat**
-- Lunch ordering is collaborative!
-
-:::
-:::
-
-::: {.column width="45%"}
-```{mermaid}
-flowchart LR
-    U("User") --> CS("Copilot Studio")
-    CS --> MCP("MCP Scraper")
-    CS -.->|"Cannot"| GP("Group Poll")
-    style GP stroke:#ff5028,stroke-dasharray: 5 5
-```
-:::
-::::
-
-::: {.notes}
-The Copilot Studio agent was good at the search and menu extraction part. But since it only talks 1:1, it couldn't collect orders from the whole team. That's a fundamental architecture limitation.
-:::
-
-## Three Attempts, One Scraper 🔄
-
-```{mermaid}
-flowchart LR
-    CS("Copilot Studio") --> S("MCP Scraper")
-    TB("Teams Bot") --> S
-    WA("Web App") --> S
-    style S fill:#190878,color:#fff
-```
-
-::: {.accent-panel}
-The Teams bot is not yet IT-approved — so today we demo the web app. But the scraper powering all three is identical.
-:::
-
-::: {.notes}
-The key takeaway here is that we wrote the scraper once as an MCP tool, and all three front-ends consume the same code. When we improve the scraper, all consumers benefit.
-:::
-
 ## 🍔 Demo: Web App {background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)"}
 
 ::: {.inverse-block}
@@ -150,6 +100,7 @@ The Copilot Studio agent calls the exact same scraper — proving the value of M
 ::: {.notes}
 Switch to Copilot Studio and show the same restaurant query. The point is that the tool code didn't change at all — only the client changed. This is the MCP value proposition in action.
 :::
+
 
 # 🕷️ How Does the Scraper Work? {background-color="#d95f02"}
 
@@ -448,7 +399,7 @@ Same function, same types, same docstring — but now any AI app can discover an
 This slide is the "aha" moment. If you already know FastAPI, you basically already know FastMCP. The decorator changes from @app.post to @mcp.tool, the framework changes from FastAPI to FastMCP, but the function body is identical. The difference is who calls it: with FastAPI, your frontend makes HTTP requests. With FastMCP, any MCP-compatible LLM client — Claude, ChatGPT, Copilot Studio — can discover the tool and call it autonomously.
 :::
 
-## One Codebase, Three Front Doors 🚪🚪🚪
+## One Codebase, Three Front Doors
 
 ```{mermaid}
 flowchart TB
@@ -563,3 +514,54 @@ Follow along on Github at [github.com/j-jayes/literate-broccoli](https://github.
 ### CTL + ALT + DELISH
 
 Built with FastMCP, FastAPI, and React.
+
+# Appendix{background-color="#d95f02"}
+
+
+## Copilot Studio: Great for 1:1, Not for Group Polls 🙅{visibility="uncounted"}
+
+:::: {.columns}
+::: {.column width="55%"}
+::: {.incremental}
+
+- Built a Copilot Studio agent with MCP tool access
+- Works perfectly in a 1:1 conversation
+- Can search for menus, extract items, show results
+- **Cannot create a poll in a group chat**
+- Lunch ordering is collaborative!
+
+:::
+:::
+
+::: {.column width="45%"}
+```{mermaid}
+flowchart LR
+    U("User") --> CS("Copilot Studio")
+    CS --> MCP("MCP Scraper")
+    CS -.->|"Cannot"| GP("Group Poll")
+    style GP stroke:#ff5028,stroke-dasharray: 5 5
+```
+:::
+::::
+
+::: {.notes}
+The Copilot Studio agent was good at the search and menu extraction part. But since it only talks 1:1, it couldn't collect orders from the whole team. That's a fundamental architecture limitation.
+:::
+
+## Three Attempts, One Scraper 🔄{visibility="uncounted"}
+
+```{mermaid}
+flowchart LR
+    CS("Copilot Studio") --> S("MCP Scraper")
+    TB("Teams Bot") --> S
+    WA("Web App") --> S
+    style S fill:#190878,color:#fff
+```
+
+::: {.accent-panel}
+The Teams bot is not yet IT-approved — so today we demo the web app. But the scraper powering all three is identical.
+:::
+
+::: {.notes}
+The key takeaway here is that we wrote the scraper once as an MCP tool, and all three front-ends consume the same code. When we improve the scraper, all consumers benefit.
+:::
