@@ -254,23 +254,6 @@ flowchart LR
 MCP was created by Anthropic and open-sourced. Think of it like USB-C: you define your tool once, expose it over HTTP or stdio, and any MCP-compatible client can use it. No custom integration per client.
 :::
 
-## MCP Has Broad Ecosystem Support 🌍
-
-::: {.statement}
-Supported by Claude, ChatGPT, VS Code, Cursor, and many more.
-:::
-
-::: {.incremental}
-
-- Define your tool once with input and output schemas
-- Expose it over HTTP or stdio
-- Any MCP-compatible client can call it
-- No custom integration code per consumer
-
-:::
-
-<!-- IMAGE: You can add an ecosystem logos graphic here. Save to assets/screenshots/mcp-ecosystem.png and use: ![](assets/screenshots/mcp-ecosystem.png) -->
-
 ## FastMCP Makes It Trivial ⚡
 
 :::: {.columns}
