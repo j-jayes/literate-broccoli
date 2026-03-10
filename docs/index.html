@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.8.25">
 
   <meta name="author" content="Jonathan Jayes">
-  <meta name="dcterms.date" content="2026-03-09">
+  <meta name="dcterms.date" content="2026-03-10">
   <title>CTL + ALT + DELISH</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -219,7 +219,7 @@
       </div>
             <div class="nexer-title-slide__panel">
         <p class="nexer-title-slide__label">Date</p>
-        <p class="date">2026-03-09</p>
+        <p class="date">2026-03-10</p>
       </div>
           </div>
   </div>
@@ -377,12 +377,32 @@
           display:block!important;
       }</style></aside>
 </section>
-<section id="demo" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
-<h2>🍔 Demo</h2>
+<section id="demo-web-app" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
+<h2>🍔 Demo: Web App</h2>
 <div class="inverse-block">
 <p><strong>Let’s see the web app in action.</strong></p>
 <p>Search for a restaurant, review the menu, create a poll, and place orders — all powered by the agentic scraper.</p>
 </div>
+</section>
+<section id="demo-copilot-studio-agent" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
+<h2>🤖 Demo: Copilot Studio Agent</h2>
+<div class="inverse-block">
+<p><strong>Same MCP tool, different client.</strong></p>
+<p>The Copilot Studio agent calls the exact same scraper — proving the value of MCP: build once, connect everywhere.</p>
+</div>
+<aside class="notes">
+<p>Switch to Copilot Studio and show the same restaurant query. The point is that the tool code didn’t change at all — only the client changed. This is the MCP value proposition in action.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section></section>
 <section>
 <section id="how-does-the-scraper-work" class="title-slide slide level1 center" data-background-color="#d95f02">
@@ -497,6 +517,51 @@
 <li class="fragment">Price normalization handles “125:-”, “125 kr”, “125 SEK”</li>
 </ul>
 </div></div>
+</section>
+<section id="when-things-go-wrong" class="slide level2">
+<h2>When Things Go Wrong 🛡️</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<h3 id="llm-provider-fallback">LLM provider fallback</h3>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    A("Azure OpenAI") --&gt;|"fails"| B("OpenAI")
+    B --&gt;|"fails"| C("Google Gemini")
+    style A fill:#190878,color:#fff
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>If one provider is down or rate-limited, the next one picks up automatically.</p>
+</div><div class="column" style="width:48%;">
+<h3 id="scraper-resilience">Scraper resilience</h3>
+<ul>
+<li class="fragment">403 Forbidden? Falls back to web search</li>
+<li class="fragment">PDF menu? Extracts text with PyMuPDF</li>
+<li class="fragment">Wrong page? LLM navigates away</li>
+<li class="fragment">Infinite loop? MAX_STEPS = 8 stops it</li>
+<li class="fragment">No menu found? Returns a clear error</li>
+</ul>
+</div></div>
+<aside class="notes">
+<p>This is what makes it production-ready. The LLM provider chain tries Azure OpenAI first, then falls back to OpenAI, then Gemini. The scraper itself handles hostile websites gracefully — if it gets blocked, it searches the web for an alternative URL. If it lands on the wrong page, the LLM recognises that and navigates elsewhere.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section></section>
 <section>
 <section id="what-is-mcp" class="title-slide slide level1 center" data-background-color="#7570b3">
@@ -600,6 +665,101 @@
           display:block!important;
       }</style></aside>
 </section>
+<section id="what-does-fastmcp-do-for-you" class="slide level2">
+<h2>What Does FastMCP Do For You? 🪄</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    F("Your Python Function") --&gt; D("@mcp.tool")
+    D --&gt; S("JSON Schema from type hints")
+    D --&gt; V("Input validation via Pydantic")
+    D --&gt; Doc("Tool description from docstring")
+    D --&gt; T("HTTP + stdio transport")
+    style D fill:#190878,color:#fff
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<ul>
+<li class="fragment">You write a normal Python function with type hints</li>
+<li class="fragment">FastMCP generates the JSON schema, validates inputs, and handles transport</li>
+<li class="fragment">The docstring becomes the tool description that LLMs read when deciding to call it</li>
+<li class="fragment">Run over stdio for local clients or HTTP for remote ones</li>
+</ul>
+<aside class="notes">
+<p>The key insight is that FastMCP turns your regular Python function into a protocol-compliant tool. You don’t write any JSON Schema, you don’t handle HTTP requests, you don’t parse arguments. You just write a function.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="fastapi-vs.-fastmcp-spot-the-difference" class="slide level2">
+<h2>FastAPI vs.&nbsp;FastMCP: Spot the Difference 🔍</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<h3 id="fastapi-endpoint">FastAPI endpoint</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</span>
+<span id="cb4-2"><a href=""></a></span>
+<span id="cb4-3"><a href=""></a>app <span class="op">=</span> FastAPI()</span>
+<span id="cb4-4"><a href=""></a></span>
+<span id="cb4-5"><a href=""></a><span class="at">@app.post</span>(<span class="st">"/menu"</span>)</span>
+<span id="cb4-6"><a href=""></a><span class="cf">async</span> <span class="kw">def</span> get_menu(</span>
+<span id="cb4-7"><a href=""></a>    restaurant_name: <span class="bu">str</span>,</span>
+<span id="cb4-8"><a href=""></a>    menu_url: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,</span>
+<span id="cb4-9"><a href=""></a>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb4-10"><a href=""></a>    <span class="co">"""Fetch a restaurant menu."""</span></span>
+<span id="cb4-11"><a href=""></a>    <span class="cf">return</span> <span class="cf">await</span> get_restaurant_menu(</span>
+<span id="cb4-12"><a href=""></a>        restaurant_name,</span>
+<span id="cb4-13"><a href=""></a>        menu_url<span class="op">=</span>menu_url <span class="kw">or</span> <span class="va">None</span>,</span>
+<span id="cb4-14"><a href=""></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Called by: <strong>your frontend code</strong></p>
+</div><div class="column" style="width:48%;">
+<h3 id="fastmcp-tool">FastMCP tool</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="im">from</span> fastmcp <span class="im">import</span> FastMCP</span>
+<span id="cb5-2"><a href=""></a></span>
+<span id="cb5-3"><a href=""></a>mcp <span class="op">=</span> FastMCP(<span class="st">"lunch-menu-poll"</span>)</span>
+<span id="cb5-4"><a href=""></a></span>
+<span id="cb5-5"><a href=""></a><span class="at">@mcp.tool</span></span>
+<span id="cb5-6"><a href=""></a><span class="cf">async</span> <span class="kw">def</span> get_menu(</span>
+<span id="cb5-7"><a href=""></a>    restaurant_name: <span class="bu">str</span>,</span>
+<span id="cb5-8"><a href=""></a>    menu_url: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,</span>
+<span id="cb5-9"><a href=""></a>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb5-10"><a href=""></a>    <span class="co">"""Fetch a restaurant menu."""</span></span>
+<span id="cb5-11"><a href=""></a>    <span class="cf">return</span> <span class="cf">await</span> get_restaurant_menu(</span>
+<span id="cb5-12"><a href=""></a>        restaurant_name,</span>
+<span id="cb5-13"><a href=""></a>        menu_url<span class="op">=</span>menu_url <span class="kw">or</span> <span class="va">None</span>,</span>
+<span id="cb5-14"><a href=""></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Called by: <strong>any LLM client</strong></p>
+</div></div>
+<div class="accent-panel">
+<p>Same function, same types, same docstring — but now any AI app can discover and call it.</p>
+</div>
+<aside class="notes">
+<p>This slide is the “aha” moment. If you already know FastAPI, you basically already know FastMCP. The decorator changes from <span class="citation" data-cites="app.post">@app.post</span> to <span class="citation" data-cites="mcp.tool">@mcp.tool</span>, the framework changes from FastAPI to FastMCP, but the function body is identical. The difference is who calls it: with FastAPI, your frontend makes HTTP requests. With FastMCP, any MCP-compatible LLM client — Claude, ChatGPT, Copilot Studio — can discover the tool and call it autonomously.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="one-codebase-three-front-doors" class="slide level2">
 <h2>One Codebase, Three Front Doors 🚪🚪🚪</h2>
 <div class="cell" data-reveal="true" data-layout-align="default">
@@ -656,21 +816,21 @@
 <h2>One Dockerfile, From Code to Cloud 🐳</h2>
 <div class="columns">
 <div class="column" style="width:52%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource dockerfile number-lines code-with-copy"><code class="sourceCode dockerfile"><span id="cb4-1"><a href=""></a><span class="co"># Stage 1: Build React frontend</span></span>
-<span id="cb4-2"><a href=""></a><span class="kw">FROM</span> node:20-alpine <span class="kw">AS</span> frontend-build</span>
-<span id="cb4-3"><a href=""></a><span class="kw">COPY</span> lunch-web-app/frontend/ ./</span>
-<span id="cb4-4"><a href=""></a><span class="kw">RUN</span> <span class="ex">npm</span> ci <span class="kw">&amp;&amp;</span> <span class="ex">npm</span> run build</span>
-<span id="cb4-5"><a href=""></a></span>
-<span id="cb4-6"><a href=""></a><span class="co"># Stage 2: Python backend + static files</span></span>
-<span id="cb4-7"><a href=""></a><span class="kw">FROM</span> python:3.12-slim</span>
-<span id="cb4-8"><a href=""></a><span class="kw">COPY</span> requirements.txt ./</span>
-<span id="cb4-9"><a href=""></a><span class="kw">RUN</span> <span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
-<span id="cb4-10"><a href=""></a><span class="kw">COPY</span> src/ ./src/</span>
-<span id="cb4-11"><a href=""></a><span class="kw">COPY</span> lunch-web-app/backend/ ./backend/</span>
-<span id="cb4-12"><a href=""></a><span class="kw">COPY</span> <span class="op">--from=frontend-build</span> /dist ./frontend/dist</span>
-<span id="cb4-13"><a href=""></a></span>
-<span id="cb4-14"><a href=""></a><span class="kw">CMD</span> [<span class="st">"uvicorn"</span>, <span class="st">"backend.main:app"</span>,</span>
-<span id="cb4-15"><a href=""></a>     <span class="st">"--host"</span>, <span class="st">"0.0.0.0"</span>, <span class="st">"--port"</span>, <span class="st">"8000"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource dockerfile number-lines code-with-copy"><code class="sourceCode dockerfile"><span id="cb6-1"><a href=""></a><span class="co"># Stage 1: Build React frontend</span></span>
+<span id="cb6-2"><a href=""></a><span class="kw">FROM</span> node:20-alpine <span class="kw">AS</span> frontend-build</span>
+<span id="cb6-3"><a href=""></a><span class="kw">COPY</span> lunch-web-app/frontend/ ./</span>
+<span id="cb6-4"><a href=""></a><span class="kw">RUN</span> <span class="ex">npm</span> ci <span class="kw">&amp;&amp;</span> <span class="ex">npm</span> run build</span>
+<span id="cb6-5"><a href=""></a></span>
+<span id="cb6-6"><a href=""></a><span class="co"># Stage 2: Python backend + static files</span></span>
+<span id="cb6-7"><a href=""></a><span class="kw">FROM</span> python:3.12-slim</span>
+<span id="cb6-8"><a href=""></a><span class="kw">COPY</span> requirements.txt ./</span>
+<span id="cb6-9"><a href=""></a><span class="kw">RUN</span> <span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb6-10"><a href=""></a><span class="kw">COPY</span> src/ ./src/</span>
+<span id="cb6-11"><a href=""></a><span class="kw">COPY</span> lunch-web-app/backend/ ./backend/</span>
+<span id="cb6-12"><a href=""></a><span class="kw">COPY</span> <span class="op">--from=frontend-build</span> /dist ./frontend/dist</span>
+<span id="cb6-13"><a href=""></a></span>
+<span id="cb6-14"><a href=""></a><span class="kw">CMD</span> [<span class="st">"uvicorn"</span>, <span class="st">"backend.main:app"</span>,</span>
+<span id="cb6-15"><a href=""></a>     <span class="st">"--host"</span>, <span class="st">"0.0.0.0"</span>, <span class="st">"--port"</span>, <span class="st">"8000"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div><div class="column" style="width:48%;">
 <ul>
 <li class="fragment">Multi-stage build: Node for frontend, Python for backend</li>

@@ -131,12 +131,24 @@ The Teams bot is not yet IT-approved — so today we demo the web app. But the s
 The key takeaway here is that we wrote the scraper once as an MCP tool, and all three front-ends consume the same code. When we improve the scraper, all consumers benefit.
 :::
 
-## 🍔 Demo {background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)"}
+## 🍔 Demo: Web App {background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)"}
 
 ::: {.inverse-block}
 **Let's see the web app in action.**
 
 Search for a restaurant, review the menu, create a poll, and place orders — all powered by the agentic scraper.
+:::
+
+## 🤖 Demo: Copilot Studio Agent {background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)"}
+
+::: {.inverse-block}
+**Same MCP tool, different client.**
+
+The Copilot Studio agent calls the exact same scraper — proving the value of MCP: build once, connect everywhere.
+:::
+
+::: {.notes}
+Switch to Copilot Studio and show the same restaurant query. The point is that the tool code didn't change at all — only the client changed. This is the MCP value proposition in action.
 :::
 
 # 🕷️ How Does the Scraper Work? {background-color="#d95f02"}
@@ -231,6 +243,41 @@ class ExtractedMenuItem(BaseModel):
 :::
 :::
 ::::
+
+## When Things Go Wrong 🛡️
+
+:::: {.columns}
+::: {.column width="48%"}
+### LLM provider fallback
+
+```{mermaid}
+flowchart TD
+    A("Azure OpenAI") -->|"fails"| B("OpenAI")
+    B -->|"fails"| C("Google Gemini")
+    style A fill:#190878,color:#fff
+```
+
+If one provider is down or rate-limited, the next one picks up automatically.
+:::
+
+::: {.column width="48%"}
+### Scraper resilience
+
+::: {.incremental}
+
+- 403 Forbidden? Falls back to web search
+- PDF menu? Extracts text with PyMuPDF
+- Wrong page? LLM navigates away
+- Infinite loop? MAX_STEPS = 8 stops it
+- No menu found? Returns a clear error
+
+:::
+:::
+::::
+
+::: {.notes}
+This is what makes it production-ready. The LLM provider chain tries Azure OpenAI first, then falls back to OpenAI, then Gemini. The scraper itself handles hostile websites gracefully — if it gets blocked, it searches the web for an alternative URL. If it lands on the wrong page, the LLM recognises that and navigates elsewhere.
+:::
 
 # 🔌 What is MCP? {background-color="#7570b3"}
 
