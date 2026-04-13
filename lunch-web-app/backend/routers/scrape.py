@@ -1,16 +1,33 @@
-"""Scrape router - calls the existing agentic scraper."""
+"""Scrape router - calls the existing agentic scraper, and serves cached menus."""
 
 from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, Cookie, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
-from ..models import MenuItem, ScrapeRequest, ScrapeResponse
+from ..cached_menus import CACHED_RESTAURANTS
+from ..models import (
+    CachedRestaurantsResponse,
+    MenuItem,
+    RestaurantMenu,
+    ScrapeRequest,
+    ScrapeResponse,
+)
 from .auth import require_auth
 
 router = APIRouter(tags=["scrape"])
 logger = logging.getLogger(__name__)
+
+
+@router.get("/cached-restaurants", response_model=CachedRestaurantsResponse)
+async def get_cached_restaurants(_token: str = Depends(require_auth)):
+    """Return the pre-scraped menus for Holy Greens and Dockside Burgers."""
+    restaurants = [
+        RestaurantMenu(restaurant_name=r["restaurant_name"], items=r["items"])
+        for r in CACHED_RESTAURANTS
+    ]
+    return CachedRestaurantsResponse(restaurants=restaurants)
 
 
 @router.post("/scrape", response_model=ScrapeResponse)
@@ -52,6 +69,7 @@ async def scrape_menu(body: ScrapeRequest, _token: str = Depends(require_auth)):
             price=item.price,
             category=item.category.value,
             description=item.description,
+            subcategory=item.subcategory,
         )
         for item in items
     ]

@@ -40,7 +40,8 @@ class ExtractedMenuItem(BaseModel):
     name: str = Field(min_length=1)
     price: Optional[Decimal] = None
     category: MenuCategory = MenuCategory.other
-    description: Optional[str] = None
+    description: str = ""
+    subcategory: Optional[str] = None
 
     @field_validator("category", mode="before")
     @classmethod

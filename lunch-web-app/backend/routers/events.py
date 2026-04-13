@@ -8,6 +8,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from .. import sessions as store
+from ..models import SessionResponse
 
 router = APIRouter(tags=["events"])
 
@@ -23,7 +24,7 @@ async def session_events(session_id: str):
     async def event_stream():
         try:
             # Send initial state
-            yield f"data: {session.model_dump_json()}\n\n"
+            yield f"data: {SessionResponse.from_session(session).model_dump_json()}\n\n"
             while True:
                 try:
                     data = await asyncio.wait_for(queue.get(), timeout=30.0)

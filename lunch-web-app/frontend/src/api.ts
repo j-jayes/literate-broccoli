@@ -1,4 +1,4 @@
-import type { LunchSession, MenuItem } from "./types";
+import type { LunchSession, MenuItem, RestaurantMenu } from "./types";
 
 const BASE = "/api";
 
@@ -43,9 +43,16 @@ export async function scrapeMenu(
   return data.items;
 }
 
+export async function getCachedRestaurants(): Promise<RestaurantMenu[]> {
+  const res = await fetch(`${BASE}/cached-restaurants`, {
+    credentials: "include",
+  });
+  const data = await handleResponse<{ restaurants: RestaurantMenu[] }>(res);
+  return data.restaurants;
+}
+
 export async function createSession(
-  restaurantName: string,
-  items: MenuItem[],
+  restaurants: RestaurantMenu[],
   description?: string
 ): Promise<LunchSession> {
   const res = await fetch(`${BASE}/sessions`, {
@@ -53,9 +60,8 @@ export async function createSession(
     headers: { "Content-Type": "application/json" },
     credentials: "include",
     body: JSON.stringify({
-      restaurant_name: restaurantName,
+      restaurants,
       description: description || null,
-      items,
     }),
   });
   return handleResponse<LunchSession>(res);

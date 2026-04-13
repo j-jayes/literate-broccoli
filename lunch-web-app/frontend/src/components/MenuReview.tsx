@@ -14,10 +14,39 @@ import {
   CheckmarkCircle24Regular,
 } from "@fluentui/react-icons";
 import { createSession } from "../api";
-import type { MenuItem } from "../types";
+import type { RestaurantMenu } from "../types";
+
+// Nexer brand colors assigned per restaurant
+const RESTAURANT_COLORS: Record<string, { bg: string; header: string }> = {
+  "Holy Greens": { bg: "#D9E6F0", header: "#190878" },
+  "Dockside Burgers": { bg: "#FFE8DE", header: "#FF875A" },
+};
+const FALLBACK_COLORS = [
+  { bg: "#F0E6FF", header: "#AA4BF5" },
+  { bg: "#EDE0FF", header: "#5A1EA0" },
+  { bg: "#F0F0F0", header: "#919191" },
+];
+
+function getColor(name: string, index: number) {
+  return RESTAURANT_COLORS[name] ?? FALLBACK_COLORS[index % FALLBACK_COLORS.length];
+}
 
 const useStyles = makeStyles({
-  card: { padding: "24px" },
+  restaurantSection: {
+    borderRadius: "10px",
+    overflow: "hidden",
+    marginBottom: "16px",
+    border: `1px solid ${tokens.colorNeutralStroke2}`,
+  },
+  restaurantHeader: {
+    padding: "12px 20px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  restaurantBody: {
+    padding: "16px 20px",
+  },
   category: {
     marginTop: "16px",
     marginBottom: "8px",
@@ -57,7 +86,7 @@ const useStyles = makeStyles({
   shareBox: {
     marginTop: "16px",
     padding: "16px",
-    backgroundColor: "#e8f5e9",
+    backgroundColor: "#D9E6F0",
     borderRadius: "8px",
     display: "flex",
     flexDirection: "column",
@@ -73,15 +102,22 @@ const useStyles = makeStyles({
 const CATEGORY_ORDER = ["main", "side", "drink", "dessert", "other"];
 
 interface Props {
-  restaurantName: string;
-  items: MenuItem[];
+  restaurants: RestaurantMenu[];
 }
 
-export default function MenuReview({ restaurantName, items }: Props) {
+// Stable key for an item: "restaurantIndex:itemIndex"
+type ItemKey = string;
+
+export default function MenuReview({ restaurants }: Props) {
   const styles = useStyles();
-  const [selected, setSelected] = useState<Set<number>>(
-    () => new Set(items.map((_, i) => i))
-  );
+
+  // selected: set of "restaurantIdx:itemIdx" keys
+  const [selected, setSelected] = useState<Set<ItemKey>>(() => {
+    const all = new Set<ItemKey>();
+    restaurants.forEach((r, ri) => r.items.forEach((_, ii) => all.add(`${ri}:${ii}`)));
+    return all;
+  });
+
   const [description, setDescription] = useState(() => {
     const today = new Date().toLocaleDateString("sv-SE");
     return `Lunch ${today}`;
@@ -91,34 +127,31 @@ export default function MenuReview({ restaurantName, items }: Props) {
   const [copied, setCopied] = useState(false);
   const [createError, setCreateError] = useState("");
 
-  const toggle = (idx: number) => {
+  const toggle = (key: ItemKey) => {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(idx)) next.delete(idx);
-      else next.add(idx);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
       return next;
     });
   };
 
-  const grouped = CATEGORY_ORDER.map((cat) => ({
-    category: cat,
-    items: items
-      .map((item, idx) => ({ ...item, idx }))
-      .filter((item) => item.category === cat),
-  })).filter((g) => g.items.length > 0);
+  const totalItems = restaurants.reduce((s, r) => s + r.items.length, 0);
 
   const handleCreate = async () => {
     setCreating(true);
     setCreateError("");
     try {
-      const selectedItems = items.filter((_, i) => selected.has(i));
-      const session = await createSession(
-        restaurantName,
-        selectedItems,
-        description.trim() || undefined
-      );
-      const url = `${window.location.origin}/session/${session.id}`;
-      setSessionUrl(url);
+      // Build filtered restaurants keeping only selected items
+      const filtered: RestaurantMenu[] = restaurants
+        .map((r, ri) => ({
+          restaurant_name: r.restaurant_name,
+          items: r.items.filter((_, ii) => selected.has(`${ri}:${ii}`)),
+        }))
+        .filter((r) => r.items.length > 0);
+
+      const session = await createSession(filtered, description.trim() || undefined);
+      setSessionUrl(`${window.location.origin}/session/${session.id}`);
     } catch (err: any) {
       setCreateError(err.message || "Failed to create session");
     } finally {
@@ -136,53 +169,121 @@ export default function MenuReview({ restaurantName, items }: Props) {
 
   return (
     <>
-      <Card className={styles.card}>
+      <Card style={{ padding: "24px" }}>
         <Text size={500} weight="semibold">
-          Menu: {restaurantName}
+          Review Menu
         </Text>
-        <Text size={300} style={{ color: "#616161" }}>
-          {items.length} items found. Deselect any items you don't want in the
-          poll.
+        <Text size={300} style={{ color: "#616161", marginTop: "4px" }}>
+          {totalItems} items across {restaurants.length} restaurant{restaurants.length !== 1 ? "s" : ""}. Deselect any items you don't want in the poll.
         </Text>
 
-        {grouped.map((group) => (
-          <div key={group.category}>
-            <Text className={styles.category} size={400} weight="semibold">
-              <Badge appearance="filled" color="brand" style={{ marginRight: 8 }}>
-                {group.category}
-              </Badge>
-            </Text>
-            {group.items.map((item) => (
-              <div className={styles.item} key={item.idx}>
-                <div className={styles.itemLeft}>
-                  <Checkbox
-                    checked={selected.has(item.idx)}
-                    onChange={() => toggle(item.idx)}
-                  />
-                  <div>
-                    <Text className={styles.itemName}>{item.name}</Text>
-                    {item.description && (
-                      <div>
-                        <Text className={styles.itemDesc}>
-                          {item.description}
-                        </Text>
-                      </div>
-                    )}
-                  </div>
+        <div style={{ marginTop: "20px" }}>
+          {restaurants.map((restaurant, ri) => {
+            const color = getColor(restaurant.restaurant_name, ri);
+            const grouped = CATEGORY_ORDER
+              .map((cat) => {
+                const catItems = restaurant.items
+                  .map((item, ii) => ({ ...item, key: `${ri}:${ii}` }))
+                  .filter((item) => item.category === cat);
+                const hasSubcategories = cat === "main" && catItems.some((i) => i.subcategory);
+                const subgroups: { label: string | null; items: typeof catItems }[] = hasSubcategories
+                  ? Array.from(
+                      catItems.reduce((map, item) => {
+                        const k = item.subcategory ?? "";
+                        if (!map.has(k)) map.set(k, []);
+                        map.get(k)!.push(item);
+                        return map;
+                      }, new Map<string, typeof catItems>())
+                    ).map(([label, items]) => ({ label: label || null, items }))
+                  : [{ label: null, items: catItems }];
+                return { category: cat, items: catItems, subgroups };
+              })
+              .filter((g) => g.items.length > 0);
+
+            const selectedCount = restaurant.items.filter((_, ii) => selected.has(`${ri}:${ii}`)).length;
+
+            return (
+              <div key={ri} className={styles.restaurantSection}>
+                <div
+                  className={styles.restaurantHeader}
+                  style={{ backgroundColor: color.header }}
+                >
+                  <Text size={400} weight="semibold" style={{ color: "white" }}>
+                    {restaurant.restaurant_name}
+                  </Text>
+                  <Text size={200} style={{ color: "rgba(255,255,255,0.8)" }}>
+                    {selectedCount} / {restaurant.items.length} selected
+                  </Text>
                 </div>
-                {item.price != null && (
-                  <Text className={styles.price}>{Number(item.price)} kr</Text>
-                )}
+                <div className={styles.restaurantBody} style={{ backgroundColor: color.bg }}>
+                  {grouped.map((group) => (
+                    <div key={group.category}>
+                      <Text className={styles.category} size={300} weight="semibold">
+                        <Badge
+                          appearance="filled"
+                          style={{
+                            backgroundColor: color.header,
+                            color: "white",
+                            marginRight: 8,
+                          }}
+                        >
+                          {group.category}
+                        </Badge>
+                      </Text>
+                      {group.subgroups.map((sub, si) => (
+                        <div key={sub.label ?? si}>
+                          {sub.label && (
+                            <Text
+                              size={200}
+                              weight="semibold"
+                              style={{
+                                display: "block",
+                                marginTop: 10,
+                                marginBottom: 2,
+                                color: color.header,
+                                textTransform: "uppercase",
+                                letterSpacing: "0.04em",
+                              }}
+                            >
+                              {sub.label}
+                            </Text>
+                          )}
+                          {sub.items.map((item) => (
+                            <div className={styles.item} key={item.key}>
+                              <div className={styles.itemLeft}>
+                                <Checkbox
+                                  checked={selected.has(item.key)}
+                                  onChange={() => toggle(item.key)}
+                                />
+                                <div>
+                                  <Text className={styles.itemName}>{item.name}</Text>
+                                  {item.description && (
+                                    <div>
+                                      <Text className={styles.itemDesc}>
+                                        {item.description}
+                                      </Text>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              {item.price != null && (
+                                <Text className={styles.price}>{Number(item.price)} kr</Text>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-        ))}
+            );
+          })}
+        </div>
 
         {!sessionUrl && (
           <div className={styles.sessionInfo}>
-            <Text size={300} weight="semibold">
-              Poll Details
-            </Text>
+            <Text size={300} weight="semibold">Poll Details</Text>
             <Input
               placeholder="e.g. Friday lunch, Team outing, etc."
               value={description}
@@ -202,38 +303,35 @@ export default function MenuReview({ restaurantName, items }: Props) {
             appearance="primary"
             onClick={handleCreate}
             disabled={creating || selected.size === 0 || !!sessionUrl}
+            style={{ backgroundColor: "#190878", border: "none" }}
           >
-            {creating ? "Creating..." : `Create Poll (${selected.size} items)`}
+            {creating ? "Creating…" : `Create Poll (${selected.size} items)`}
           </Button>
           <Text size={200} style={{ color: "#616161" }}>
-            {selected.size} of {items.length} selected
+            {selected.size} of {totalItems} selected
           </Text>
         </div>
       </Card>
 
       {sessionUrl && (
-        <Card className={styles.card} style={{ marginTop: "16px" }}>
+        <Card style={{ padding: "24px", marginTop: "16px" }}>
           <div className={styles.shareBox}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <CheckmarkCircle24Regular style={{ color: "#2e7d32" }} />
-              <Text size={400} weight="semibold" style={{ color: "#2e7d32" }}>
+              <CheckmarkCircle24Regular style={{ color: "#190878" }} />
+              <Text size={400} weight="semibold" style={{ color: "#190878" }}>
                 Poll created!
               </Text>
             </div>
             <Text size={300}>
-              Share this link with your colleagues so they can choose their
-              lunch:
+              Share this link with your colleagues so they can choose their lunch:
             </Text>
             <div className={styles.urlRow}>
-              <Input
-                value={sessionUrl}
-                readOnly
-                style={{ flex: 1 }}
-              />
+              <Input value={sessionUrl} readOnly style={{ flex: 1 }} />
               <Button
                 appearance="primary"
                 icon={<Clipboard24Regular />}
                 onClick={handleCopy}
+                style={{ backgroundColor: "#190878", border: "none" }}
               >
                 {copied ? "Copied!" : "Copy"}
               </Button>

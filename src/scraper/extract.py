@@ -24,7 +24,14 @@ SYSTEM_PROMPT = (
     "IMPORTANT: When a category header (e.g. 'Dips', 'Milkshakes', 'Sauces') "
     "is followed by a list of flavours or varieties, create a SEPARATE item for "
     "each individual flavour/variety (e.g. 'Dips - Garlic Mayo', 'Dips - BBQ Sauce'). "
-    "Do NOT group them under a single item."
+    "Do NOT group them under a single item. "
+    "SUBCATEGORY: For items with category='main', if the menu has named subsections "
+    "(e.g. 'HOT BOWLS', 'SALLAD', 'FRUKOST', 'BURGERS', 'PASTA'), set subcategory "
+    "to that section heading exactly as written. Leave subcategory=null for all "
+    "non-main items and for mains that do not fall under a named subsection. "
+    "DESCRIPTION: Every item MUST have a description. Write a concise, appetising "
+    "1-2 sentence description of the dish based on its name and any details visible "
+    "on the page. Never leave description empty or null."
 )
 
 
@@ -83,7 +90,7 @@ class GeminiExtractor:
             "Respond with JSON matching this schema: "
             '{"items": [{"name": str, "price": number|null, '
             '"category": "main"|"side"|"drink"|"dessert"|"other", '
-            '"description": str|null}]}'
+            '"description": str, "subcategory": str|null}]}'
         )
         response = client.models.generate_content(
             model=settings.gemini_model,

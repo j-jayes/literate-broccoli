@@ -14,8 +14,8 @@ router = APIRouter(tags=["sessions"])
 
 @router.post("/sessions", response_model=SessionResponse)
 async def create_session(body: CreateSessionRequest, _token: str = Depends(require_auth)):
-    session = store.create_session(body.restaurant_name, body.items, body.description)
-    return session
+    session = store.create_session(body.restaurants, body.description)
+    return SessionResponse.from_session(session)
 
 
 @router.get("/sessions/{session_id}", response_model=SessionResponse)
@@ -23,7 +23,7 @@ async def get_session(session_id: str):
     session = store.get_session(session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
-    return session
+    return SessionResponse.from_session(session)
 
 
 @router.post("/sessions/{session_id}/orders", response_model=SessionResponse)
@@ -31,12 +31,12 @@ async def submit_order(session_id: str, body: SubmitOrderRequest):
     session = store.get_session(session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
-    valid_names = {item.name for item in session.items}
+    valid_names = {item.name for item in session.all_items}
     invalid = [i for i in body.selected_items if i not in valid_names]
     if invalid:
         raise HTTPException(status_code=422, detail=f"Invalid menu items: {invalid}")
     session = await store.add_order(session_id, body.name, body.selected_items)
-    return session
+    return SessionResponse.from_session(session)
 
 
 @router.get("/sessions/{session_id}/csv")

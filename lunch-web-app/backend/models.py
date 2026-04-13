@@ -14,7 +14,13 @@ class MenuItem(BaseModel):
     name: str
     price: Optional[Decimal] = None
     category: str = "other"
-    description: Optional[str] = None
+    description: str = ""
+    subcategory: Optional[str] = None
+
+
+class RestaurantMenu(BaseModel):
+    restaurant_name: str
+    items: list[MenuItem]
 
 
 class ScrapeRequest(BaseModel):
@@ -26,10 +32,13 @@ class ScrapeResponse(BaseModel):
     items: list[MenuItem]
 
 
+class CachedRestaurantsResponse(BaseModel):
+    restaurants: list[RestaurantMenu]
+
+
 class CreateSessionRequest(BaseModel):
-    restaurant_name: str
+    restaurants: list[RestaurantMenu]
     description: Optional[str] = None
-    items: list[MenuItem]
 
 
 class SubmitOrderRequest(BaseModel):
@@ -45,20 +54,38 @@ class Order(BaseModel):
 
 class LunchSession(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    restaurant_name: str
+    restaurants: list[RestaurantMenu]
     description: Optional[str] = None
-    items: list[MenuItem]
     orders: dict[str, Order] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    @property
+    def title(self) -> str:
+        return " & ".join(r.restaurant_name for r in self.restaurants)
+
+    @property
+    def all_items(self) -> list[MenuItem]:
+        return [item for r in self.restaurants for item in r.items]
 
 
 class SessionResponse(BaseModel):
     id: UUID
-    restaurant_name: str
+    title: str
+    restaurants: list[RestaurantMenu]
     description: Optional[str] = None
-    items: list[MenuItem]
     orders: dict[str, Order]
     created_at: datetime
+
+    @classmethod
+    def from_session(cls, session: LunchSession) -> "SessionResponse":
+        return cls(
+            id=session.id,
+            title=session.title,
+            restaurants=session.restaurants,
+            description=session.description,
+            orders=session.orders,
+            created_at=session.created_at,
+        )
 
 
 class AuthRequest(BaseModel):

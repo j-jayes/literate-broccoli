@@ -42,10 +42,12 @@ export default function OrderList({ session }: Props) {
     }
   }
 
-  // Price lookup
+  // Price lookup across all restaurants
   const priceMap: Record<string, number | null> = {};
-  for (const item of session.items) {
-    priceMap[item.name] = item.price;
+  for (const restaurant of session.restaurants) {
+    for (const item of restaurant.items) {
+      priceMap[item.name] = item.price;
+    }
   }
 
   return (
