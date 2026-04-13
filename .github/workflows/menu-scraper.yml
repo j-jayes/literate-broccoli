@@ -122,6 +122,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Set Azure subscription
+        run: az account set --subscription "90a112e9-de6b-4011-be14-2cf8943a9ec8"
+
       - name: Log in to ACR
         uses: azure/docker-login@v2
         with:
@@ -140,23 +143,32 @@ jobs:
           docker push "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:$IMAGE_TAG"
           docker push "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:latest"
 
-      - name: Update web app container image
+      - name: Ensure Container Apps extension
+        run: az extension add --name containerapp --upgrade --yes
+
+      - name: Update container app image
         env:
           IMAGE_NAME: lunch-web-app
+          IMAGE_TAG: menu-${{ github.run_number }}
+          ACR_LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
+          AZ_CONTAINER_APP_NAME: lunch-web-app
+          AZ_RESOURCE_GROUP: rg-lunch-app-prod
         run: |
-          az webapp config container set \
-            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
-            --name "${{ secrets.AZURE_WEBAPP_NAME }}" \
-            --container-image-name "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:latest" \
-            --container-registry-url "https://${{ secrets.ACR_LOGIN_SERVER }}" \
-            --container-registry-user "${{ secrets.ACR_USERNAME }}" \
-            --container-registry-password "${{ secrets.ACR_PASSWORD }}"
+          az containerapp update \
+            --name "$AZ_CONTAINER_APP_NAME" \
+            --resource-group "$AZ_RESOURCE_GROUP" \
+            --image "$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG"
 
-      - name: Restart web app
+      - name: Show latest container app revision
+        env:
+          AZ_CONTAINER_APP_NAME: lunch-web-app
+          AZ_RESOURCE_GROUP: rg-lunch-app-prod
         run: |
-          az webapp restart \
-            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
-            --name "${{ secrets.AZURE_WEBAPP_NAME }}"
+          az containerapp revision list \
+            --name "$AZ_CONTAINER_APP_NAME" \
+            --resource-group "$AZ_RESOURCE_GROUP" \
+            --query "sort_by(@, &properties.createdTime)[-1].{revision:name,image:properties.template.containers[0].image,active:properties.active,created:properties.createdTime}" \
+            -o table
 
   notify:
     runs-on: ubuntu-latest
