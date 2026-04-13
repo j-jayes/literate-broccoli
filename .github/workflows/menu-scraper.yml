@@ -57,13 +57,13 @@ jobs:
             --config lunch-web-app/automation/restaurants.yml \
             --hashes lunch-web-app/automation/menu_hashes.json \
             --runs "$RUNS" \
-            --output-dir .menu-artifacts
+            --output-dir menu-artifacts
 
       - name: Extract report flags
         id: flags
         shell: bash
         run: |
-          report=.menu-artifacts/report.json
+          report=menu-artifacts/report.json
           echo "menus_updated=$(jq -r '.menus_updated' "$report")" >> "$GITHUB_OUTPUT"
           echo "should_notify=$(jq -r '.should_notify' "$report")" >> "$GITHUB_OUTPUT"
           echo "has_errors=$(jq -r '.has_errors' "$report")" >> "$GITHUB_OUTPUT"
@@ -73,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: menu-scrape-artifacts
-          path: .menu-artifacts/
+          path: menu-artifacts/
 
   update-and-deploy:
     runs-on: ubuntu-latest
@@ -87,7 +87,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: menu-scrape-artifacts
-          path: .menu-artifacts
+          path: menu-artifacts
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -100,9 +100,9 @@ jobs:
 
       - name: Apply generated hashes and menus
         run: |
-          cp .menu-artifacts/menu_hashes.next.json lunch-web-app/automation/menu_hashes.json
+          cp menu-artifacts/menu_hashes.next.json lunch-web-app/automation/menu_hashes.json
           python scripts/generate_cached_menus.py \
-            --input .menu-artifacts/menus_canonical.json \
+            --input menu-artifacts/menus_canonical.json \
             --output lunch-web-app/backend/cached_menus.py
 
       - name: Commit and push menu updates
@@ -169,12 +169,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: menu-scrape-artifacts
-          path: .menu-artifacts
+          path: menu-artifacts
 
       - name: Create notification issue
         uses: actions/github-script@v7
         env:
-          REPORT_PATH: .menu-artifacts/report.json
+          REPORT_PATH: menu-artifacts/report.json
         with:
           script: |
             const fs = require('fs');
