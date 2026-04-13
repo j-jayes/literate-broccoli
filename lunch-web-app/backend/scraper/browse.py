@@ -15,9 +15,9 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from src.config import settings
-from src.scraper.extract import extract_menu
-from src.scraper.fetch import (
+from ..scraper_settings import settings
+from .extract import extract_menu
+from .fetch import (
     detect_pdf_links,
     extract_links,
     fetch_page_html,
@@ -221,7 +221,7 @@ def _call_gemini(user_prompt: str) -> str:
 
 async def _web_search(query: str) -> list[dict[str, str]]:
     """Search the web using Gemini + Google Search grounding."""
-    from src.scraper.search_restaurants import web_search
+    from .search_restaurants import web_search
     return await web_search(query)
 
 

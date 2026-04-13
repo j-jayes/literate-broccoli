@@ -33,8 +33,8 @@ async def get_cached_restaurants(_token: str = Depends(require_auth)):
 @router.post("/scrape", response_model=ScrapeResponse)
 async def scrape_menu(body: ScrapeRequest, _token: str = Depends(require_auth)):
     """Scrape a restaurant menu using the agentic browser."""
-    from src.scraper.browse import browse_and_extract
-    from src.scraper.search_restaurants import search_restaurant_url
+    from ..scraper.browse import browse_and_extract
+    from ..scraper.search_restaurants import search_restaurant_url
 
     # Resolve starting URL: direct URL > Gemini + Google Search
     if body.menu_url:

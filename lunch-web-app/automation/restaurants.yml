@@ -1,0 +1,9 @@
+restaurants:
+  - name: Holy Greens
+    known_url: null
+    enabled: true
+    scrape_runs: 3
+  - name: Dockside Burgers
+    known_url: null
+    enabled: true
+    scrape_runs: 3

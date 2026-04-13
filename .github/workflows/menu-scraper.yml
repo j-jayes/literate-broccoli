@@ -1,0 +1,222 @@
+name: Scheduled Menu Scraper
+
+on:
+  schedule:
+    - cron: '17 4 3 * *'
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: Number of scrape runs per restaurant (odd values recommended)
+        required: false
+        default: '3'
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: menu-scraper
+  cancel-in-progress: false
+
+jobs:
+  scrape-and-compare:
+    runs-on: ubuntu-latest
+    outputs:
+      menus_updated: ${{ steps.flags.outputs.menus_updated }}
+      should_notify: ${{ steps.flags.outputs.should_notify }}
+      has_errors: ${{ steps.flags.outputs.has_errors }}
+      has_significant_changes: ${{ steps.flags.outputs.has_significant_changes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r lunch-web-app/requirements.txt
+
+      - name: Run scrape and compare
+        env:
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          AZURE_OPENAI_API_VERSION: ${{ secrets.AZURE_OPENAI_API_VERSION }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+        run: |
+          RUNS="${{ github.event.inputs.runs || '3' }}"
+          python scripts/scrape_and_compare.py \
+            --config lunch-web-app/automation/restaurants.yml \
+            --hashes lunch-web-app/automation/menu_hashes.json \
+            --runs "$RUNS" \
+            --output-dir .menu-artifacts
+
+      - name: Extract report flags
+        id: flags
+        shell: bash
+        run: |
+          report=.menu-artifacts/report.json
+          echo "menus_updated=$(jq -r '.menus_updated' "$report")" >> "$GITHUB_OUTPUT"
+          echo "should_notify=$(jq -r '.should_notify' "$report")" >> "$GITHUB_OUTPUT"
+          echo "has_errors=$(jq -r '.has_errors' "$report")" >> "$GITHUB_OUTPUT"
+          echo "has_significant_changes=$(jq -r '.has_significant_changes' "$report")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: menu-scrape-artifacts
+          path: .menu-artifacts/
+
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    needs: scrape-and-compare
+    if: needs.scrape-and-compare.outputs.menus_updated == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: menu-scrape-artifacts
+          path: .menu-artifacts
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Apply generated hashes and menus
+        run: |
+          cp .menu-artifacts/menu_hashes.next.json lunch-web-app/automation/menu_hashes.json
+          python scripts/generate_cached_menus.py \
+            --input .menu-artifacts/menus_canonical.json \
+            --output lunch-web-app/backend/cached_menus.py
+
+      - name: Commit and push menu updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add lunch-web-app/automation/menu_hashes.json lunch-web-app/backend/cached_menus.py
+          if git diff --cached --quiet; then
+            echo "No menu changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(menu): refresh cached menus [skip ci]"
+          git push
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to ACR
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push image
+        env:
+          IMAGE_NAME: lunch-web-app
+          IMAGE_TAG: menu-${{ github.run_number }}
+        run: |
+          docker build -f lunch-web-app/Dockerfile -t "$IMAGE_NAME:$IMAGE_TAG" .
+          docker tag "$IMAGE_NAME:$IMAGE_TAG" "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:$IMAGE_TAG"
+          docker tag "$IMAGE_NAME:$IMAGE_TAG" "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:latest"
+          docker push "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:$IMAGE_TAG"
+          docker push "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:latest"
+
+      - name: Update web app container image
+        env:
+          IMAGE_NAME: lunch-web-app
+        run: |
+          az webapp config container set \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ secrets.AZURE_WEBAPP_NAME }}" \
+            --container-image-name "${{ secrets.ACR_LOGIN_SERVER }}/$IMAGE_NAME:latest" \
+            --container-registry-url "https://${{ secrets.ACR_LOGIN_SERVER }}" \
+            --container-registry-user "${{ secrets.ACR_USERNAME }}" \
+            --container-registry-password "${{ secrets.ACR_PASSWORD }}"
+
+      - name: Restart web app
+        run: |
+          az webapp restart \
+            --resource-group "${{ secrets.AZURE_RESOURCE_GROUP }}" \
+            --name "${{ secrets.AZURE_WEBAPP_NAME }}"
+
+  notify:
+    runs-on: ubuntu-latest
+    needs:
+      - scrape-and-compare
+      - update-and-deploy
+    if: always() && needs.scrape-and-compare.outputs.should_notify == 'true'
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: menu-scrape-artifacts
+          path: .menu-artifacts
+
+      - name: Create notification issue
+        uses: actions/github-script@v7
+        env:
+          REPORT_PATH: .menu-artifacts/report.json
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync(process.env.REPORT_PATH, 'utf8'));
+            const title = `[menu-scraper] Action required: ${new Date().toISOString().slice(0, 10)}`;
+
+            const lines = [];
+            lines.push('## Scheduled Menu Scraper Report');
+            lines.push('');
+            lines.push(`- menus_updated: ${report.menus_updated}`);
+            lines.push(`- has_errors: ${report.has_errors}`);
+            lines.push(`- has_significant_changes: ${report.has_significant_changes}`);
+            lines.push('');
+
+            for (const entry of report.restaurants || []) {
+              lines.push(`### ${entry.restaurant_name}`);
+              lines.push(`- status: ${entry.status}`);
+              lines.push(`- changed: ${entry.changed}`);
+              lines.push(`- significant_change: ${entry.significant_change}`);
+              lines.push(`- success_runs: ${entry.success_runs}`);
+              lines.push(`- failed_runs: ${entry.failed_runs}`);
+              if (entry.accepted_hash_sha256) {
+                lines.push(`- accepted_hash_sha256: ${entry.accepted_hash_sha256}`);
+              }
+              if ((entry.errors || []).length > 0) {
+                lines.push('- errors:');
+                for (const err of entry.errors.slice(0, 10)) {
+                  lines.push(`  - ${err}`);
+                }
+              }
+              if (entry.change_summary) {
+                const c = entry.change_summary;
+                lines.push(`- change_ratio: ${c.change_ratio}`);
+                lines.push(`- added_count: ${c.added_count}, removed_count: ${c.removed_count}, price_changed_count: ${c.price_changed_count}`);
+              }
+              lines.push('');
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body: lines.join('\n'),
+              labels: ['menu-scraper', 'automation', 'needs-triage']
+            });

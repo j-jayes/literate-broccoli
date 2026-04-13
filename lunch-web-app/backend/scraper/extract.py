@@ -9,8 +9,8 @@ from __future__ import annotations
 import logging
 from typing import Protocol
 
-from src.config import settings
-from src.models.schemas import ExtractedMenu, ExtractedMenuItem
+from ..scraper_settings import settings
+from ..scraper_schemas import ExtractedMenu, ExtractedMenuItem
 
 logger = logging.getLogger(__name__)
 

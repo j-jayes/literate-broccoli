@@ -1,55 +1,11 @@
 # Lunch Menu Poll
 
-A suite of tools for finding restaurant menus and running lunch polls at the office. Started as an over-engineered microservices project, reworked into three focused components:
+This repo currently focuses on two active parts:
 
-1. **MCP Server** — an MCP (Model Context Protocol) server that Copilot Studio agents can call to find menus and generate Adaptive Card polls for Microsoft Teams
-2. **Lunch Web App** — a standalone FastAPI + React web app where teams can scrape a menu, create a poll session, and collect orders with live updates
-3. **Teams Bot** — a Teams bot that integrates the lunch ordering flow directly into Microsoft Teams
-4. **Presentation** — Reveal.js slides documenting the project (published via GitHub Pages)
+1. **Lunch Web App** — a FastAPI + React app for scraping menus and running office lunch polls.
+2. **Presentation** — Reveal.js slides documenting the architecture and workflow.
 
-## MCP Server (`src/`)
-
-### How it works
-
-1. A user in Teams tells the Copilot Studio agent a restaurant name
-2. The agent calls this MCP server's `get_menu_poll` tool
-3. The server uses an agentic scraper to navigate restaurant websites step-by-step, using an LLM to find and extract menu items
-4. Returns an Adaptive Card poll that team members can use to pick their lunch
-
-### LLM provider fallback chain
-
-Azure OpenAI → OpenAI → Google Gemini
-
-### Quick start
-
-```bash
-pip install -r requirements.txt
-cp .env.example .env
-# Edit .env with your API keys
-
-python -m src.server   # Run the MCP server
-pytest tests/ -v       # Run tests
-```
-
-### Configuration
-
-Set these in `.env`:
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `GOOGLE_API_KEY` | Yes | Google Gemini API key (used for search + LLM fallback) |
-| `AZURE_OPENAI_ENDPOINT` | Recommended | Azure OpenAI endpoint URL |
-| `AZURE_OPENAI_API_KEY` | Recommended | Azure OpenAI API key |
-| `AZURE_OPENAI_DEPLOYMENT` | Recommended | Model deployment name (default: gpt-4o) |
-| `OPENAI_API_KEY` | Fallback | OpenAI API key (used if Azure fails) |
-
-### Connecting to Copilot Studio
-
-1. Run this MCP server (or deploy it to Azure App Service)
-2. In Copilot Studio, go to your agent's **Tools** page
-3. Select **Add a tool** > **New tool** > **Model Context Protocol**
-4. Enter the server URL and configure authentication
-5. The `get_menu_poll` tool will be available to your agent
+The scraping implementation now lives directly in `lunch-web-app/backend`.
 
 ## Lunch Web App (`lunch-web-app/`)
 
@@ -60,9 +16,25 @@ A standalone web app (FastAPI backend + React/Fluent UI frontend) deployed on Az
 
 Deployed at: `https://lunch-web-app.happyrock-baafa260.swedencentral.azurecontainerapps.io/`
 
-## Teams Bot (`teams-lunch-bot/`)
+### Scraper configuration
 
-A Teams bot integration with Adaptive Card-based ordering, deployable to Azure App Service.
+Set these in `.env`:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GOOGLE_API_KEY` | Recommended | Gemini key used for search/fallback during scraping |
+| `AZURE_OPENAI_ENDPOINT` | Optional | Azure OpenAI endpoint URL |
+| `AZURE_OPENAI_API_KEY` | Optional | Azure OpenAI API key |
+| `AZURE_OPENAI_DEPLOYMENT` | Optional | Azure deployment name |
+| `OPENAI_API_KEY` | Optional | OpenAI fallback key |
+
+### Quick check
+
+```bash
+pip install -r requirements.txt
+pip install -r lunch-web-app/requirements.txt
+python -m compileall -q lunch-web-app/backend scripts
+```
 
 ## Presentation (`docs/`)
 
@@ -71,29 +43,58 @@ Reveal.js slides covering the project architecture and LLM fallback strategy. Pu
 ## Project structure
 
 ```
-src/                        # MCP server
-  server.py                 # FastMCP entry point
-  config.py                 # Environment-based settings
-  models/schemas.py         # Pydantic models for menu items
-  scraper/
-    browse.py               # Agentic web browser for menu discovery
-    search_restaurants.py   # Restaurant search
-    fetch.py                # HTML fetching and cleaning
-    extract.py              # LLM menu extraction with fallback chain
-  cards/poll.py             # Adaptive Card poll builder
-  tools/menu.py             # Main tool orchestration
-tests/                      # MCP server tests
+scripts/                    # Automation scripts (scrape compare, code generation)
 lunch-web-app/              # Standalone web app
+  automation/               # Menu refresh config and hash state
+    restaurants.yml         # Restaurant scrape registry
+    menu_hashes.json        # Last-known-good menu hashes
   backend/                  # FastAPI (auth, scrape, sessions, SSE)
+    scraper/                # Agentic scraper implementation
+    scraper_settings.py     # LLM/scraper settings
+    scraper_schemas.py      # Extracted menu schemas
   frontend/                 # React + Fluent UI SPA
   Dockerfile                # Multi-stage build
-teams-lunch-bot/            # Teams bot
-  app.py / bot.py           # Bot framework entry points
-  cards/                    # Adaptive Card templates
-  teams_app_manifest/       # Teams app manifest
 docs/                       # Reveal.js presentation slides
 .github/checklists/         # Archived planning docs and checklists
 ```
+
+## TODO
+
+- Add comprehensive tests for lunch-web-app backend and frontend (unit + API + integration).
+
+## Repo Reorganization Plan (Best Practice)
+
+If starting from scratch, this repo would be cleaner with an explicit app-first monorepo layout and stricter boundaries.
+
+1. Adopt a top-level `apps/` + `packages/` structure.
+  - `apps/lunch-web-app` for deployable web app code.
+  - `apps/teams-lunch-bot` for Teams bot runtime.
+  - `apps/mcp-server` only if MCP runtime remains a first-class deployable.
+  - `packages/scraper-core` for reusable scraping logic currently in `lunch-web-app/backend/scraper`.
+  - `packages/menu-models` for shared Pydantic schemas and menu normalization.
+
+2. Move automation into app-owned directories.
+  - Keep scheduled refresh assets under `apps/lunch-web-app/automation/`.
+  - Keep generated outputs and templates clearly separated from hand-edited source.
+
+3. Split CI workflows by concern.
+  - `ci.yml` for fast lint/type/smoke checks.
+  - `menu-refresh.yml` for scheduled expensive LLM scraping.
+  - `deploy.yml` for image build and deployment promotion.
+
+4. Standardize environment and secret management.
+  - `.env.example` at repo root plus app-specific `.env.example` files.
+  - Document one-to-one mapping between env vars and GitHub Actions secrets.
+  - Prefer GitHub Environments for prod/stage scoped secrets.
+
+5. Re-introduce tests in a modern structure.
+  - `apps/lunch-web-app/tests/backend` and `apps/lunch-web-app/tests/frontend`.
+  - Add scraper deterministic tests around hash/normalization and fixture-based extraction.
+  - Keep live website scraping out of default CI and run it only in scheduled jobs.
+
+6. Reduce ambiguity around active runtimes.
+  - Mark each app as `active`, `maintenance`, or `archived` in README.
+  - Move historical artifacts and exploratory code into an `archive/` folder when no longer deployed.
 
 ## Development history
 

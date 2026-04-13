@@ -10,7 +10,7 @@ import re
 
 import httpx
 
-from src.config import settings
+from ..scraper_settings import settings
 
 logger = logging.getLogger(__name__)
 

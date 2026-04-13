@@ -15,9 +15,6 @@ COPY requirements.txt ./requirements-base.txt
 COPY lunch-web-app/requirements.txt ./requirements-webapp.txt
 RUN pip install --no-cache-dir -r requirements-base.txt -r requirements-webapp.txt
 
-# Copy scraper source (src/) to /app/src/
-COPY src/ ./src/
-
 # Copy web app backend
 COPY lunch-web-app/backend/ ./lunch-web-app/backend/
 
