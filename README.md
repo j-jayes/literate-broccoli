@@ -31,8 +31,8 @@ Set these in `.env`:
 ### Quick check
 
 ```bash
-pip install -r requirements.txt
-pip install -r lunch-web-app/requirements.txt
+uv pip install .
+uv pip install -r lunch-web-app/requirements.txt
 python -m compileall -q lunch-web-app/backend scripts
 ```
 

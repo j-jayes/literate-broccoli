@@ -10,10 +10,12 @@ RUN npm run build
 FROM python:3.12-slim
 WORKDIR /app
 
+COPY --from=ghcr.io/astral-sh/uv:0.7.3 /uv /uvx /bin/
+
 # Install Python dependencies
-COPY requirements.txt ./requirements-base.txt
+COPY pyproject.toml ./pyproject.toml
 COPY lunch-web-app/requirements.txt ./requirements-webapp.txt
-RUN pip install --no-cache-dir -r requirements-base.txt -r requirements-webapp.txt
+RUN uv pip install --system --no-cache . -r requirements-webapp.txt
 
 # Copy web app backend
 COPY lunch-web-app/backend/ ./lunch-web-app/backend/
