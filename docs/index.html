@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.8.25">
 
   <meta name="author" content="Jonathan Jayes">
-  <meta name="dcterms.date" content="2026-03-10">
+  <meta name="dcterms.date" content="2026-04-16">
   <title>CTL + ALT + DELISH</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -219,7 +219,7 @@
       </div>
             <div class="nexer-title-slide__panel">
         <p class="nexer-title-slide__label">Date</p>
-        <p class="date">2026-03-10</p>
+        <p class="date">2026-04-16</p>
       </div>
           </div>
   </div>
@@ -288,31 +288,149 @@
 </section>
 <section id="so-lets-try-giving-the-system-more-agency-to-achieve-specific-goals" class="slide level2">
 <h2>So, let’s try giving the system more agency to achieve specific goals 🚀</h2>
-<p>Follow along on Github at <a href="https://github.com/j-jayes/literate-broccoli">github.com/j-jayes/literate-broccoli</a></p>
+<p>Follow along on GitHub at <a href="https://github.com/j-jayes/literate-broccoli">github.com/j-jayes/literate-broccoli</a></p>
 <div class="footer">
 <p><img data-src="assets/github_link.png"></p>
 </div>
 </section></section>
-<section>
 <section id="the-road-to-a-working-solution" class="title-slide slide level1 center" data-background-color="#1b9e77">
 <h1>🛤️ The Road to a Working Solution</h1>
 
 </section>
-<section id="demo-web-app" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
-<h2>🍔 Demo: Web App</h2>
-<div class="inverse-block">
-<p><strong>Let’s see the web app in action.</strong></p>
-<p>Search for a restaurant, review the menu, create a poll, and place orders — all powered by the agentic scraper.</p>
+
+<section>
+<section id="the-app-in-action" class="title-slide slide level1 center" data-background-color="#d95f02">
+<h1>📱 The App in Action</h1>
+
+</section>
+<section id="step-1-sign-in" class="slide level2">
+<h2>Step 1 — Sign In</h2>
+<p>The admin authenticates with a shared team password before accessing the ordering panel.</p>
+
+<img data-src="assets/screenshots/app/01-login.png" style="width:80.0%" alt="Login screen" class="r-stretch"></section>
+<section id="step-2-select-todays-restaurants" class="slide level2">
+<h2>Step 2 — Select Today’s Restaurants</h2>
+<p>Pre-scraped menus load instantly. The admin picks which restaurants to include in today’s poll.</p>
+
+<img data-src="assets/screenshots/app/03-admin-panel.png" style="width:80.0%" alt="Admin panel showing cached restaurants" class="r-stretch"></section>
+<section id="step-3-add-a-new-restaurant-optional" class="slide level2">
+<h2>Step 3 — Add a New Restaurant (optional)</h2>
+<p>The AI agent can browse any restaurant website on demand and extract the menu automatically.</p>
+
+<img data-src="assets/screenshots/app/04-add-restaurant-form.png" style="width:80.0%" alt="Add restaurant form" class="r-stretch"></section>
+<section id="step-4-review-trim-the-menu" class="slide level2">
+<h2>Step 4 — Review &amp; Trim the Menu</h2>
+<p>The admin can deselect items before publishing — useful for removing sold-out or seasonal dishes.</p>
+
+<img data-src="assets/screenshots/app/06-menu-review.png" style="width:80.0%" alt="Menu review page" class="r-stretch"></section>
+<section id="step-5-create-the-poll" class="slide level2">
+<h2>Step 5 — Create the Poll</h2>
+<p>One click creates a shareable link. The session is live immediately.</p>
+
+<img data-src="assets/screenshots/app/09-poll-link.png" style="width:80.0%" alt="Poll created with shareable link" class="r-stretch"></section>
+<section id="step-6-team-members-open-the-link" class="slide level2">
+<h2>Step 6 — Team Members Open the Link</h2>
+<p>Anyone with the link can see the full menu and check off what they want.</p>
+
+<img data-src="assets/screenshots/app/10-poll-page.png" style="width:80.0%" alt="Poll page for team members" class="r-stretch"></section>
+<section id="step-7-select-items-and-submit" class="slide level2">
+<h2>Step 7 — Select Items and Submit</h2>
+<p>Name, tick items, done. Orders arrive in real time on the admin’s screen.</p>
+
+<img data-src="assets/screenshots/app/11-order-selected.png" style="width:80.0%" alt="Order selection with items checked" class="r-stretch"></section>
+<section id="step-8-live-order-feed" class="slide level2">
+<h2>Step 8 — Live Order Feed</h2>
+<p>Submitted orders appear instantly. The admin sees a running tally as the team orders.</p>
+
+<img data-src="assets/screenshots/app/13-order-list.png" style="width:80.0%" alt="Live order list showing submitted orders" class="r-stretch"></section></section>
+<section>
+<section id="system-architecture" class="title-slide slide level1 center" data-background-color="#7570b3">
+<h1>🏗️ System Architecture</h1>
+
+</section>
+<section id="high-level-overview" class="slide level2">
+<h2>High-Level Overview</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph Users["👥 Users"]
+        Admin("Admin\nbrowser")
+        Team("Team\nbrowsers")
+    end
+
+    subgraph App["🐳 Azure Container App"]
+        React("React\nfrontend")
+        FastAPI("FastAPI\nbackend")
+        Scraper("Agentic\nscraper")
+        Cache("Cached\nmenus.py")
+    end
+
+    subgraph LLMs["🧠 LLM Providers"]
+        AzOAI("Azure\nOpenAI")
+        OAI("OpenAI")
+        Gemini("Google\nGemini")
+    end
+
+    subgraph CI["⚙️ GitHub Actions"]
+        Scrape("Monthly\nscraper job")
+        Deploy("Build &amp;\ndeploy job")
+    end
+
+    subgraph Azure["☁️ Azure"]
+        ACR("Container\nRegistry")
+        Storage("Blob\nStorage")
+    end
+
+    Admin --&gt;|HTTPS| React
+    Team --&gt;|HTTPS| React
+    React --&gt;|REST API| FastAPI
+    FastAPI --&gt; Scraper
+    FastAPI --&gt; Cache
+    Scraper --&gt;|fallback chain| AzOAI
+    AzOAI --&gt;|fails| OAI
+    OAI --&gt;|fails| Gemini
+    FastAPI --&gt;|sessions| Storage
+    Scrape --&gt;|refreshes| Cache
+    Deploy --&gt;|pushes image| ACR
+    ACR --&gt;|pulls| App
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
 </div>
 </section>
-<section id="demo-copilot-studio-agent" class="slide level2" data-background-gradient="linear-gradient(135deg, #190878 0%, #5a1ea0 52%, #aa4bf5 100%)">
-<h2>🤖 Demo: Copilot Studio Agent</h2>
-<div class="inverse-block">
-<p><strong>Same MCP tool, different client.</strong></p>
-<p>The Copilot Studio agent calls the exact same scraper — proving the value of MCP: build once, connect everywhere.</p>
+<section id="scraper-subsystem" class="slide level2">
+<h2>Scraper Subsystem</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TD
+    Start("Restaurant name\nor URL") --&gt; Fetch("Fetch page")
+    Fetch --&gt; LLM("LLM reads page\n+ all links")
+    LLM --&gt;|extract| Done("Return\nMenuItems")
+    LLM --&gt;|navigate| Nav("Follow link")
+    Nav --&gt; Fetch
+    LLM --&gt;|search| Search("Gemini web\ngrounding")
+    Search --&gt; Fetch
+    LLM --&gt;|fail| Error("Return error")
+
+    style Done fill:#1b9e77,color:#fff
+    style Error fill:#d95f02,color:#fff
+    style LLM fill:#190878,color:#fff
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
 </div>
 <aside class="notes">
-<p>Switch to Copilot Studio and show the same restaurant query. The point is that the tool code didn’t change at all — only the client changed. This is the MCP value proposition in action.</p>
+<p>MAX_STEPS = 8 prevents infinite loops. At each step the LLM sees the page text and all links and picks one of four actions. The reason field in every decision is invaluable for debugging.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -324,6 +442,68 @@
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
+</section>
+<section id="session-ordering-subsystem" class="slide level2">
+<h2>Session &amp; Ordering Subsystem</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant Admin
+    participant Backend
+    participant Storage
+    participant Team
+
+    Admin-&gt;&gt;Backend: POST /api/sessions {restaurants}
+    Backend-&gt;&gt;Storage: write session JSON
+    Backend--&gt;&gt;Admin: {id, url}
+
+    Admin-&gt;&gt;Team: shares /session/{id} link
+
+    Team-&gt;&gt;Backend: GET /api/sessions/{id}
+    Backend-&gt;&gt;Storage: read session
+    Backend--&gt;&gt;Team: menu items
+
+    Team-&gt;&gt;Backend: POST /sessions/{id}/orders {name, items}
+    Backend-&gt;&gt;Storage: append order
+    Backend--&gt;&gt;Team: updated session (SSE push)
+    Backend--&gt;&gt;Admin: SSE update
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+<section id="deployment-pipeline" class="slide level2">
+<h2>Deployment Pipeline</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph GH["GitHub"]
+        Push("git push\nmain") --&gt; CI("CI: compile\ncheck")
+        Sched("Cron 3rd\nof month") --&gt; Scrape("Scrape &amp;\ncompare")
+        Scrape --&gt;|menus changed| Build
+    end
+
+    subgraph Azure["Azure"]
+        Build("Docker\nbuild") --&gt; ACR("Push image\nto ACR")
+        ACR --&gt; Update("Update\nContainer App")
+        Update --&gt; Live("Live\nrevision")
+    end
+
+    style Live fill:#1b9e77,color:#fff
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 </section></section>
 <section>
 <section id="how-does-the-scraper-work" class="title-slide slide level1 center" data-background-color="#d95f02">
@@ -353,42 +533,6 @@
 <li><strong>Same code for every restaurant</strong></li>
 </ul>
 </div></div>
-</section>
-<section id="eight-steps-to-find-any-menu" class="slide level2">
-<h2>Eight Steps to Find Any Menu 🗺️</h2>
-<div class="cell" data-reveal="true" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart TD
-    Start("Start URL or search") --&gt; Fetch("Fetch page")
-    Fetch --&gt; LLM("LLM reads page + links")
-    LLM --&gt;|"extract"| Done("Return menu items")
-    LLM --&gt;|"navigate"| Nav("Follow a link")
-    Nav --&gt; Fetch
-    LLM --&gt;|"search"| Search("Web search via Gemini")
-    Search --&gt; Fetch
-    LLM --&gt;|"fail"| Error("Raise error")
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<aside class="notes">
-<p>MAX_STEPS = 8 prevents infinite loops. Gemini handles the web search grounding, GPT-4o makes the navigation decisions. The LLM gets a text preview of the page plus all links and decides what action to take at each step.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 </section>
 <section id="four-actions-one-decision-model" class="slide level2">
 <h2>Four Actions, One Decision Model 🎯</h2>
@@ -470,19 +614,6 @@
 <li class="fragment">No menu found? Returns a clear error</li>
 </ul>
 </div></div>
-<aside class="notes">
-<p>This is what makes it production-ready. The LLM provider chain tries Azure OpenAI first, then falls back to OpenAI, then Gemini. The scraper itself handles hostile websites gracefully — if it gets blocked, it searches the web for an alternative URL. If it lands on the wrong page, the LLM recognises that and navigates elsewhere.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 </section></section>
 <section>
 <section id="what-is-mcp" class="title-slide slide level1 center" data-background-color="#7570b3">
@@ -513,94 +644,8 @@
 </div>
 </div>
 </div>
-<!-- IMAGE: You can replace this mermaid with a screenshot from modelcontextprotocol.io showing their architecture diagram. Save to assets/screenshots/mcp-architecture.png and use: ![](assets/screenshots/mcp-architecture.png) -->
 <aside class="notes">
 <p>MCP was created by Anthropic and open-sourced. Think of it like USB-C: you define your tool once, expose it over HTTP or stdio, and any MCP-compatible client can use it. No custom integration per client.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="fastmcp-makes-it-trivial" class="slide level2">
-<h2>FastMCP Makes It Trivial ⚡</h2>
-<div class="columns">
-<div class="column" style="width:55%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">from</span> fastmcp <span class="im">import</span> FastMCP</span>
-<span id="cb3-2"><a href=""></a><span class="im">from</span> src.tools.menu <span class="im">import</span> get_restaurant_menu</span>
-<span id="cb3-3"><a href=""></a></span>
-<span id="cb3-4"><a href=""></a>mcp <span class="op">=</span> FastMCP(<span class="st">"lunch-menu-poll"</span>)</span>
-<span id="cb3-5"><a href=""></a></span>
-<span id="cb3-6"><a href=""></a><span class="at">@mcp.tool</span></span>
-<span id="cb3-7"><a href=""></a><span class="cf">async</span> <span class="kw">def</span> get_menu_poll(</span>
-<span id="cb3-8"><a href=""></a>    restaurant_name: <span class="bu">str</span>,</span>
-<span id="cb3-9"><a href=""></a>    menu_url: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,</span>
-<span id="cb3-10"><a href=""></a>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
-<span id="cb3-11"><a href=""></a>    <span class="co">"""Fetch a restaurant's menu and</span></span>
-<span id="cb3-12"><a href=""></a><span class="co">    return an Adaptive Card poll."""</span></span>
-<span id="cb3-13"><a href=""></a>    <span class="cf">return</span> <span class="cf">await</span> get_restaurant_menu(</span>
-<span id="cb3-14"><a href=""></a>        restaurant_name,</span>
-<span id="cb3-15"><a href=""></a>        menu_url<span class="op">=</span>menu_url <span class="kw">or</span> <span class="va">None</span>,</span>
-<span id="cb3-16"><a href=""></a>    )</span>
-<span id="cb3-17"><a href=""></a></span>
-<span id="cb3-18"><a href=""></a>app <span class="op">=</span> mcp.http_app()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:45%;">
-<div class="metric-card">
-<p><span class="metric-value">23.5k</span> <span class="metric-label">GitHub stars</span></p>
-</div>
-<div class="metric-card">
-<p><span class="metric-value">70%</span> <span class="metric-label">of MCP servers use FastMCP</span></p>
-</div>
-</div></div>
-<!-- IMAGE: You can add a FastMCP GitHub screenshot here. Save to assets/screenshots/fastmcp-github.png -->
-<aside class="notes">
-<p>This is the entire MCP server. FastMCP handles protocol negotiation, schema generation from type hints, and HTTP transport. The <span class="citation" data-cites="mcp.tool">@mcp.tool</span> decorator is all you need. The docstring becomes the tool description that LLMs see when deciding whether to call it.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="what-does-fastmcp-do-for-you" class="slide level2">
-<h2>What Does FastMCP Do For You? 🪄</h2>
-<div class="cell" data-reveal="true" data-layout-align="default">
-<div class="cell-output-display">
-<div>
-<p></p><figure class=""><p></p>
-<div>
-<pre class="mermaid mermaid-js">flowchart LR
-    F("Your Python Function") --&gt; D("@mcp.tool")
-    D --&gt; S("JSON Schema from type hints")
-    D --&gt; V("Input validation via Pydantic")
-    D --&gt; Doc("Tool description from docstring")
-    D --&gt; T("HTTP + stdio transport")
-    style D fill:#190878,color:#fff
-</pre>
-</div>
-<p></p></figure><p></p>
-</div>
-</div>
-</div>
-<ul>
-<li class="fragment">You write a normal Python function with type hints</li>
-<li class="fragment">FastMCP generates the JSON schema, validates inputs, and handles transport</li>
-<li class="fragment">The docstring becomes the tool description that LLMs read when deciding to call it</li>
-<li class="fragment">Run over stdio for local clients or HTTP for remote ones</li>
-</ul>
-<aside class="notes">
-<p>The key insight is that FastMCP turns your regular Python function into a protocol-compliant tool. You don’t write any JSON Schema, you don’t handle HTTP requests, you don’t parse arguments. You just write a function.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -618,11 +663,28 @@
 <div class="columns">
 <div class="column" style="width:48%;">
 <h3 id="fastapi-endpoint">FastAPI endpoint</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href=""></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI</span>
+<span id="cb3-2"><a href=""></a></span>
+<span id="cb3-3"><a href=""></a>app <span class="op">=</span> FastAPI()</span>
+<span id="cb3-4"><a href=""></a></span>
+<span id="cb3-5"><a href=""></a><span class="at">@app.post</span>(<span class="st">"/menu"</span>)</span>
+<span id="cb3-6"><a href=""></a><span class="cf">async</span> <span class="kw">def</span> get_menu(</span>
+<span id="cb3-7"><a href=""></a>    restaurant_name: <span class="bu">str</span>,</span>
+<span id="cb3-8"><a href=""></a>    menu_url: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,</span>
+<span id="cb3-9"><a href=""></a>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb3-10"><a href=""></a>    <span class="co">"""Fetch a restaurant menu."""</span></span>
+<span id="cb3-11"><a href=""></a>    <span class="cf">return</span> <span class="cf">await</span> get_restaurant_menu(</span>
+<span id="cb3-12"><a href=""></a>        restaurant_name,</span>
+<span id="cb3-13"><a href=""></a>        menu_url<span class="op">=</span>menu_url <span class="kw">or</span> <span class="va">None</span>,</span>
+<span id="cb3-14"><a href=""></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Called by: <strong>your frontend code</strong></p>
+</div><div class="column" style="width:48%;">
+<h3 id="fastmcp-tool">FastMCP tool</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href=""></a><span class="im">from</span> fastmcp <span class="im">import</span> FastMCP</span>
 <span id="cb4-2"><a href=""></a></span>
-<span id="cb4-3"><a href=""></a>app <span class="op">=</span> FastAPI()</span>
+<span id="cb4-3"><a href=""></a>mcp <span class="op">=</span> FastMCP(<span class="st">"lunch-menu-poll"</span>)</span>
 <span id="cb4-4"><a href=""></a></span>
-<span id="cb4-5"><a href=""></a><span class="at">@app.post</span>(<span class="st">"/menu"</span>)</span>
+<span id="cb4-5"><a href=""></a><span class="at">@mcp.tool</span></span>
 <span id="cb4-6"><a href=""></a><span class="cf">async</span> <span class="kw">def</span> get_menu(</span>
 <span id="cb4-7"><a href=""></a>    restaurant_name: <span class="bu">str</span>,</span>
 <span id="cb4-8"><a href=""></a>    menu_url: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,</span>
@@ -632,41 +694,11 @@
 <span id="cb4-12"><a href=""></a>        restaurant_name,</span>
 <span id="cb4-13"><a href=""></a>        menu_url<span class="op">=</span>menu_url <span class="kw">or</span> <span class="va">None</span>,</span>
 <span id="cb4-14"><a href=""></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Called by: <strong>your frontend code</strong></p>
-</div><div class="column" style="width:48%;">
-<h3 id="fastmcp-tool">FastMCP tool</h3>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href=""></a><span class="im">from</span> fastmcp <span class="im">import</span> FastMCP</span>
-<span id="cb5-2"><a href=""></a></span>
-<span id="cb5-3"><a href=""></a>mcp <span class="op">=</span> FastMCP(<span class="st">"lunch-menu-poll"</span>)</span>
-<span id="cb5-4"><a href=""></a></span>
-<span id="cb5-5"><a href=""></a><span class="at">@mcp.tool</span></span>
-<span id="cb5-6"><a href=""></a><span class="cf">async</span> <span class="kw">def</span> get_menu(</span>
-<span id="cb5-7"><a href=""></a>    restaurant_name: <span class="bu">str</span>,</span>
-<span id="cb5-8"><a href=""></a>    menu_url: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,</span>
-<span id="cb5-9"><a href=""></a>) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
-<span id="cb5-10"><a href=""></a>    <span class="co">"""Fetch a restaurant menu."""</span></span>
-<span id="cb5-11"><a href=""></a>    <span class="cf">return</span> <span class="cf">await</span> get_restaurant_menu(</span>
-<span id="cb5-12"><a href=""></a>        restaurant_name,</span>
-<span id="cb5-13"><a href=""></a>        menu_url<span class="op">=</span>menu_url <span class="kw">or</span> <span class="va">None</span>,</span>
-<span id="cb5-14"><a href=""></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Called by: <strong>any LLM client</strong></p>
 </div></div>
 <div class="accent-panel">
 <p>Same function, same types, same docstring — but now any AI app can discover and call it.</p>
 </div>
-<aside class="notes">
-<p>This slide is the “aha” moment. If you already know FastAPI, you basically already know FastMCP. The decorator changes from <span class="citation" data-cites="app.post">@app.post</span> to <span class="citation" data-cites="mcp.tool">@mcp.tool</span>, the framework changes from FastAPI to FastMCP, but the function body is identical. The difference is who calls it: with FastAPI, your frontend makes HTTP requests. With FastMCP, any MCP-compatible LLM client — Claude, ChatGPT, Copilot Studio — can discover the tool and call it autonomously.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 </section>
 <section id="one-codebase-three-front-doors" class="slide level2">
 <h2>One Codebase, Three Front Doors</h2>
@@ -701,66 +733,98 @@
 </div>
 </div>
 </div>
-<aside class="notes">
-<p>This is the full architecture. All three consumers call the same MCP tool. The scraper handles the browsing, extraction, and validation. Improve the scraper once, and Copilot Studio, the Teams bot, and the web app all benefit.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 </section></section>
 <section>
-<section id="shipping-it" class="title-slide slide level1 center" data-background-color="#e7298a">
-<h1>📦 Shipping It</h1>
+<section id="monitoring-operations" class="title-slide slide level1 center" data-background-color="#1b9e77">
+<h1>📊 Monitoring &amp; Operations</h1>
 
 </section>
-<section id="one-dockerfile-from-code-to-cloud" class="slide level2">
-<h2>One Dockerfile, From Code to Cloud 🐳</h2>
+<section id="what-we-have-today" class="slide level2">
+<h2>What We Have Today</h2>
 <div class="columns">
-<div class="column" style="width:52%;">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource dockerfile number-lines code-with-copy"><code class="sourceCode dockerfile"><span id="cb6-1"><a href=""></a><span class="co"># Stage 1: Build React frontend</span></span>
-<span id="cb6-2"><a href=""></a><span class="kw">FROM</span> node:20-alpine <span class="kw">AS</span> frontend-build</span>
-<span id="cb6-3"><a href=""></a><span class="kw">COPY</span> lunch-web-app/frontend/ ./</span>
-<span id="cb6-4"><a href=""></a><span class="kw">RUN</span> <span class="ex">npm</span> ci <span class="kw">&amp;&amp;</span> <span class="ex">npm</span> run build</span>
-<span id="cb6-5"><a href=""></a></span>
-<span id="cb6-6"><a href=""></a><span class="co"># Stage 2: Python backend + static files</span></span>
-<span id="cb6-7"><a href=""></a><span class="kw">FROM</span> python:3.12-slim</span>
-<span id="cb6-8"><a href=""></a><span class="kw">COPY</span> requirements.txt ./</span>
-<span id="cb6-9"><a href=""></a><span class="kw">RUN</span> <span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
-<span id="cb6-10"><a href=""></a><span class="kw">COPY</span> src/ ./src/</span>
-<span id="cb6-11"><a href=""></a><span class="kw">COPY</span> lunch-web-app/backend/ ./backend/</span>
-<span id="cb6-12"><a href=""></a><span class="kw">COPY</span> <span class="op">--from=frontend-build</span> /dist ./frontend/dist</span>
-<span id="cb6-13"><a href=""></a></span>
-<span id="cb6-14"><a href=""></a><span class="kw">CMD</span> [<span class="st">"uvicorn"</span>, <span class="st">"backend.main:app"</span>,</span>
-<span id="cb6-15"><a href=""></a>     <span class="st">"--host"</span>, <span class="st">"0.0.0.0"</span>, <span class="st">"--port"</span>, <span class="st">"8000"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div><div class="column" style="width:48%;">
+<div class="column" style="width:50%;">
+<h3 id="observability">Observability</h3>
 <ul>
-<li class="fragment">Multi-stage build: Node for frontend, Python for backend</li>
-<li class="fragment">Final image has no Node.js — just Python + static files</li>
-<li class="fragment">Push to Azure Container Registry</li>
-<li class="fragment">Azure Container Apps handles scaling and TLS</li>
-<li class="fragment">Environment variables for API keys via secrets</li>
+<li class="fragment"><strong>Log Analytics workspace</strong> — all container logs streamed automatically</li>
+<li class="fragment"><strong>GitHub Issues</strong> — monthly scrape report with per-restaurant diffs</li>
+<li class="fragment"><strong>Container App revision history</strong> — easy rollback to any previous image</li>
+<li class="fragment"><strong>Health endpoint</strong> — <code>GET /api/health</code> returns <code>{"status": "ok"}</code></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="operational-hygiene">Operational hygiene</h3>
+<ul>
+<li class="fragment"><code>[skip ci]</code> on menu commits — prevents CI loops</li>
+<li class="fragment">Concurrency lock on scraper job — no overlapping runs</li>
+<li class="fragment">LLM fallback chain — survives single provider outages</li>
+<li class="fragment"><code>uv.lock</code> — reproducible dependency snapshots across CI and Docker</li>
 </ul>
 </div></div>
-<aside class="notes">
-<p>The multi-stage Dockerfile builds the React frontend with Node, then copies the compiled static files into a slim Python image. The final image is small and only runs uvicorn. Azure Container Apps gives us managed scaling, TLS, and secret management with zero infrastructure to maintain.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
+</section>
+<section id="whats-missing-for-true-production" class="slide level2">
+<h2>What’s Missing for True Production</h2>
+<div class="cell" data-reveal="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class=""><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph Now["✅ Today"]
+        Logs("Log Analytics")
+        Issues("GitHub Issues")
+        Health("Health endpoint")
+    end
+
+    subgraph Soon["🔜 Next steps"]
+        Alerts("Azure Monitor\nalerts")
+        Dash("App Insights\ndashboard")
+        SLA("Uptime\nchecks")
+    end
+
+    subgraph Later["📅 Later"]
+        Audit("Audit log\n(who ordered what)")
+        Cost("Cost tracking\nper run")
+        Rate("Rate limiting\n&amp; auth hardening")
+    end
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="next-steps-to-production" class="title-slide slide level1 center" data-background-color="#d95f02">
+<h1>🚀 Next Steps to Production</h1>
+
+</section>
+<section id="three-priority-tracks" class="slide level2">
+<h2>Three Priority Tracks</h2>
+<div class="columns">
+<div class="column" style="width:33%;">
+<div class="metric-card">
+<p><span class="metric-value">Auth</span> <span class="metric-label">Replace shared password with Azure AD / Teams SSO</span></p>
+</div>
+</div><div class="column" style="width:33%;">
+<div class="metric-card">
+<p><span class="metric-value">Scale</span> <span class="metric-label">Persistent session storage — Blob today, Cosmos DB at scale</span></p>
+</div>
+</div><div class="column" style="width:33%;">
+<div class="metric-card">
+<p><span class="metric-value">UX</span> <span class="metric-label">Teams bot IT approval — same MCP tool, richer surface</span></p>
+</div>
+</div></div>
+</section>
+<section id="production-readiness-checklist" class="slide level2">
+<h2>Production Readiness Checklist</h2>
+<ul class="task-list">
+<li class="fragment"><label><input type="checkbox"><strong>Azure AD authentication</strong> — replace shared password with Entra ID SSO; every order linked to a real user identity</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Teams bot IT approval</strong> — same scraper, natively in the tool your team already uses</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Application Insights</strong> — traces per scrape run, latency histograms, alert on error rate spikes</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Azure Monitor alert</strong> — ping if container restarts or scraper job fails</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Cosmos DB</strong> — sessions survive container restarts; current in-memory store does not</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Uptime check</strong> — external ping every 5 min; auto-restart on failure</label></li>
+<li class="fragment"><label><input type="checkbox"><strong>Multi-restaurant support</strong> — the data model already supports it; just need more entries in <code>restaurants.yml</code></label></li>
+</ul>
 </section></section>
 <section>
 <section id="what-did-we-learn" class="title-slide slide level1 center" data-background-color="#1b9e77">
@@ -786,7 +850,7 @@
 </section>
 <section id="thank-you-questions" class="slide level2">
 <h2>Thank You — Questions? 🙏</h2>
-<p>Follow along on Github at <a href="https://github.com/j-jayes/literate-broccoli">github.com/j-jayes/literate-broccoli</a></p>
+<p>Follow along on GitHub at <a href="https://github.com/j-jayes/literate-broccoli">github.com/j-jayes/literate-broccoli</a></p>
 <div class="footer">
 <p><img data-src="assets/github_link.png"></p>
 </div>
@@ -833,19 +897,6 @@
 </div>
 </div>
 </div></div>
-<aside class="notes">
-<p>The Copilot Studio agent was good at the search and menu extraction part. But since it only talks 1:1, it couldn’t collect orders from the whole team. That’s a fundamental architecture limitation.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 </section>
 <section id="three-attempts-one-scraper" class="slide level2" data-visibility="uncounted">
 <h2>Three Attempts, One Scraper 🔄</h2>
@@ -868,19 +919,6 @@
 <div class="accent-panel">
 <p>The Teams bot is not yet IT-approved — so today we demo the web app. But the scraper powering all three is identical.</p>
 </div>
-<aside class="notes">
-<p>The key takeaway here is that we wrote the scraper once as an MCP tool, and all three front-ends consume the same code. When we improve the scraper, all consumers benefit.</p>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 
 </section></section>
     </div>

@@ -1,0 +1,33 @@
+<section id="$idprefix$title-slide"$for(title-slide-attributes/pairs)$ $it.key$="$it.value$"$endfor$ class="quarto-title-block nexer-title-slide">
+  <div class="nexer-title-slide__grid">
+    <div class="nexer-title-slide__lead">
+      <p class="nexer-title-slide__eyebrow">Nexer Insight</p>
+      $if(title)$<h1 class="title">$title$</h1>$endif$
+      $if(subtitle)$
+      <p class="subtitle">$subtitle$</p>
+      $endif$
+    </div>
+    <div class="nexer-title-slide__meta">
+      <div class="nexer-title-slide__panel">
+        <p class="nexer-title-slide__label">Demo</p>
+        <p class="nexer-title-slide__value">MCP & Agentic Systems to make life easier</p>
+      </div>
+      <div class="nexer-title-slide__panel">
+        <p class="nexer-title-slide__label">Author</p>
+        <div class="quarto-title-authors">
+        $for(by-author)$
+        <div class="quarto-title-author">
+          <div class="quarto-title-author-name">$if(by-author.url)$<a href="$by-author.url$">$endif$$if(by-author.name.literal)$$by-author.name.literal$$endif$$if(by-author.url)$</a>$endif$</div>
+        </div>
+        $endfor$
+        </div>
+      </div>
+      $if(date)$
+      <div class="nexer-title-slide__panel">
+        <p class="nexer-title-slide__label">Date</p>
+        <p class="date">$date$</p>
+      </div>
+      $endif$
+    </div>
+  </div>
+</section>
